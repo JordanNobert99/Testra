@@ -16,7 +16,7 @@
    11) Page-Specific: Bottom “solo” cards (Training/Testing/Support)
    12) Desktop-Only Tweaks (≥901px)
    13) Mobile / Small Screen (≤900px)
-   14) Page-Specific Layout: Contact page sticky footer only
+   14) Page-Specific Layout: Contact page only
    15) Utilities
    ========================================================= */
 
@@ -324,25 +324,6 @@ input:focus-visible, textarea:focus-visible, select:focus-visible{
 .btn[disabled]{ opacity:.7; cursor:not-allowed }
 .hp{ position:absolute; left:-10000px; width:1px; height:1px; overflow:hidden }
 
-/* === Contact form: center reCAPTCHA === */
-#contactForm .g-recaptcha {
-  display: block;
-  margin: .5rem auto;  /* centers the 304px-wide widget */
-  margin: 0;
-}
-
-#contact { 
-  margin-bottom: 0px 
-}
-
-/* Optional: tiny phones can scale it down a bit */
-@media (max-width: 360px){
-  #contactForm .g-recaptcha {
-    transform: scale(.9);
-    transform-origin: center;
-  }
-}
-
 
 /* ======================================
    10) Anchor Offsets (for sticky header)
@@ -364,19 +345,16 @@ form .btn  { width: 200px; justify-self: center; }
    11) Page-Specific: Bottom “solo” cards
        (Training, Testing, Support)
    ====================================== */
-/* Center the titles for those bottom sections */
 #courses + .section .section__title,
-#services + .section .section__title,    /* testing.html bottom follows #services */
-#it-services + .section .section__title  /* support.html bottom follows #it-services */{
+#services + .section .section__title,
+#it-services + .section .section__title{
   text-align: center;
 }
 
-/* Make the single card narrower, centered, and stacked
-   (UPDATED: max-width reduced from 640px to 520px) */
 #courses + .section > .container > .card,
 #services + .section > .container > .card,
 #it-services + .section > .container > .card{
-  max-width: 480px;       /* narrower */
+  max-width: 520px;
   margin-inline: auto;
   display: flex;
   flex-direction: column;
@@ -384,17 +362,15 @@ form .btn  { width: 200px; justify-self: center; }
   text-align: center;
 }
 
-/* Center the list block while keeping bullets left-aligned */
 #courses + .section > .container > .card .list,
 #services + .section > .container > .card .list,
 #it-services + .section > .container > .card .list{
   display: block;
   align-self: center;
-  text-align: left;          /* bullets remain readable */
-  margin: 0 0 1rem 0;        /* spacing above button */
+  text-align: left;
+  margin: 0 0 1rem 0;
 }
 
-/* Ensure the CTA button sits below the list and centered */
 #courses + .section > .container > .card .btn,
 #services + .section > .container > .card .btn,
 #it-services + .section > .container > .card .btn{
@@ -402,7 +378,7 @@ form .btn  { width: 200px; justify-self: center; }
   margin-top: .75rem;
 }
 
-/* Training page: if buttons exist inside the grid cards, keep them at the bottom */
+/* keep course grid buttons pinned to bottom */
 #courses .grid .card{ display:flex; flex-direction:column; }
 #courses .grid .card .btn{ margin-top:auto; }
 
@@ -416,9 +392,9 @@ form .btn  { width: 200px; justify-self: center; }
   .nav-toggle{ display:none !important; }
   #primary-menu{ display:flex !important; }
 
-  /* Footer — desktop shows NAV only (per your spec) */
+  /* Footer — desktop shows NAV only */
   .footer__grid{ justify-content: center; }
-  .footer__grid > p{ display: none !important; }             /* hide copyright */
+  .footer__grid > p{ display: none !important; }
   .footer__grid > nav.footer__menu{ display: flex !important; }
 }
 
@@ -495,14 +471,14 @@ form .btn  { width: 200px; justify-self: center; }
     gap: .5rem;
     justify-content: center;
   }
-  .footer__grid > nav.footer__menu{ display: none !important; } /* hide nav */
-  .footer__grid > p{ display: block !important; }               /* show copyright */
+  .footer__grid > nav.footer__menu{ display: none !important; }
+  .footer__grid > p{ display: block !important; }
 }
 
 
 /* ======================================
    14) Page-Specific Layout: Contact page only
-       (safe sticky footer that doesn’t affect other pages)
+   (safe sticky footer for the contact page content)
    ====================================== */
 body:has(#contact){
   min-height: 100svh;
