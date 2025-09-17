@@ -328,6 +328,11 @@ input:focus-visible, textarea:focus-visible, select:focus-visible{
 #contactForm .g-recaptcha {
   display: block;
   margin: .5rem auto;  /* centers the 304px-wide widget */
+  margin: 0;
+}
+
+#contact { 
+  margin-bottom: 0px 
 }
 
 /* Optional: tiny phones can scale it down a bit */
