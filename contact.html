@@ -1,12 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- =========================
-       Head
-       - Meta
-       - Fonts
-       - Global CSS
-       ========================= -->
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Testra - Contact</title>
@@ -20,30 +14,22 @@
   <link rel="icon" href="img/logoCircle.png" type="image/png" />
 </head>
 <body>
-  <!-- =========================
-       Header / Navigation
-       ========================= -->
+
+  <!-- Header / Nav -->
   <header class="site-header">
     <div class="container nav">
-      <!-- Brand -->
       <a class="brand" href="index.html">
         <img src="img/logoCircle.png" alt="Testra" class="brand-logo">
         <span class="brand-name">Testra</span>
       </a>
 
-      <!-- Hamburger (≤900px via CSS) -->
-      <button
-        class="nav-toggle"
-        id="navToggle"
-        aria-label="Toggle menu"
-        aria-controls="primary-menu"
-        aria-expanded="false">
+      <!-- Hamburger (shown via CSS ≤900px) -->
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-controls="primary-menu" aria-expanded="false">
         <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
           <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
         </svg>
       </button>
 
-      <!-- Primary nav -->
       <nav class="menu" id="primary-menu" role="navigation" aria-label="Main">
         <a href="index.html">Home</a><span class="sep" aria-hidden="true">|</span>
         <a href="testing.html">D&amp;A Testing</a><span class="sep" aria-hidden="true">|</span>
@@ -54,20 +40,17 @@
     </div>
   </header>
 
-  <!-- =========================
-       Main: Contact Form
-       Netlify Forms wiring:
-       - name="contact"
-       - method="POST"
-       - data-netlify="true"
-       - netlify-honeypot="website"  (matches our hidden field)
-       - hidden input "form-name" with same value as name
-       - action="/thanks.html" for no-JS fallback
-       ========================= -->
+  <!-- Contact form (Netlify Forms + reCAPTCHA v2) -->
   <section id="contact" class="section">
     <div class="container">
       <h2 class="section__title">Send us a Message</h2>
 
+      <!-- IMPORTANT:
+           - data-netlify="true" OR netlify attribute
+           - name="contact" + <input name="form-name">
+           - netlify-honeypot matches the hidden field
+           - data-netlify-recaptcha on form AND a <div> placeholder
+           - action is a non-AJAX fallback -->
       <form
         id="contactForm"
         class="form"
@@ -75,22 +58,18 @@
         method="POST"
         data-netlify="true"
         netlify-honeypot="website"
+        data-netlify-recaptcha="true"
         action="/thanks.html"
-        novalidate
-      >
-        <!-- Netlify needs this to map the submission to your form -->
+        novalidate>
+
+        <!-- Netlify needs this to map to your form -->
         <input type="hidden" name="form-name" value="contact" />
+        <!-- Hidden email subject that we will fill from your "Subject" select -->
+        <input type="hidden" id="nlSubject" name="subject" value="Testra Contact" />
 
-        <!-- Honeypot (spam trap). Hidden from humans. -->
-        <input
-          type="text"
-          name="website"
-          class="hp"
-          autocomplete="off"
-          tabindex="-1"
-          aria-hidden="true">
+        <!-- Honeypot (spam trap). Keep blank. -->
+        <input type="text" name="website" class="hp" autocomplete="off" tabindex="-1" aria-hidden="true">
 
-        <!-- Row: Name + Email -->
         <div class="form-row inline">
           <div>
             <label for="name">Your Name</label>
@@ -102,7 +81,6 @@
           </div>
         </div>
 
-        <!-- Row: Phone + Subject -->
         <div class="form-row inline">
           <div>
             <label for="phone">Phone (optional)</label>
@@ -120,26 +98,26 @@
           </div>
         </div>
 
-        <!-- Row: Message -->
         <div class="form-row">
           <label for="message">Message</label>
           <textarea id="message" name="message" placeholder="How can we help?" required></textarea>
           <div class="help">We reply as soon as possible. Your info is kept confidential.</div>
         </div>
 
-        <!-- Row: Submit + Status -->
+        <!-- Netlify-provided reCAPTCHA placeholder (rendered after deploy) -->
+        <div class="form-row">
+          <div data-netlify-recaptcha="true"></div>
+        </div>
+
         <div class="form-row">
           <button type="submit" class="btn" id="sendBtn">Send Message</button>
           <div id="formStatus" class="status" role="status" aria-live="polite"></div>
         </div>
       </form>
     </div>
-    <div data-netlify-recaptcha="true"></div>
   </section>
 
-  <!-- =========================
-       Footer
-       ========================= -->
+  <!-- Footer -->
   <footer class="site-footer">
     <div class="container footer__grid">
       <p>© <span id="year"></span> Testra</p>
@@ -153,12 +131,6 @@
     </div>
   </footer>
 
-  <!-- =========================
-       Scripts
-       - Year stamp
-       - Mobile nav toggle
-       - Netlify AJAX submit (progressive enhancement)
-       ========================= -->
   <script>
     // Year stamp
     document.getElementById('year').textContent = new Date().getFullYear();
@@ -168,21 +140,16 @@
       const toggle = document.getElementById('navToggle');
       const menu = document.getElementById('primary-menu');
       if (!toggle || !menu) return;
-
       toggle.addEventListener('click', () => {
         const open = menu.classList.toggle('is-open');
         toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
       });
-
-      // Close on link click
       menu.addEventListener('click', (e) => {
         if (e.target.closest('a')) {
           menu.classList.remove('is-open');
           toggle.setAttribute('aria-expanded', 'false');
         }
       });
-
-      // Close on Escape
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
           menu.classList.remove('is-open');
@@ -191,29 +158,55 @@
       });
     })();
 
-    // Netlify AJAX submit (keeps user on the page with inline success)
+    // Build dynamic email subject from inputs (used by Netlify notifications)
     (function(){
-      const form = document.getElementById('contactForm');
+      const nameEl = document.getElementById('name');
+      const topicEl = document.getElementById('topic');
+      const subjEl  = document.getElementById('nlSubject');
+
+      function setSubject(){
+        const topic = (topicEl && topicEl.value) ? topicEl.value : 'General';
+        const name  = (nameEl && nameEl.value) ? nameEl.value.trim() : 'Visitor';
+        subjEl.value = `Testra Contact — ${topic} from ${name}`;
+      }
+      if (nameEl)  nameEl.addEventListener('input', setSubject);
+      if (topicEl) topicEl.addEventListener('change', setSubject);
+      setSubject();
+    })();
+
+    // Netlify AJAX submit WITH reCAPTCHA enforcement
+    (function(){
+      const form     = document.getElementById('contactForm');
       const statusEl = document.getElementById('formStatus');
-      const sendBtn = document.getElementById('sendBtn');
+      const sendBtn  = document.getElementById('sendBtn');
 
       if (!form) return;
 
       function encodeFormData(fd){
-        // Ensure the form-name hidden field is included
         if (!fd.has('form-name')) fd.append('form-name', form.getAttribute('name') || 'contact');
         return new URLSearchParams(fd).toString();
       }
 
       form.addEventListener('submit', async (e) => {
-        // If JS fails or is disabled, the action="/thanks.html" fallback will work.
+        // If JS fails, the normal POST to /thanks.html still works
         e.preventDefault();
 
-        // Honeypot check: if filled, silently ignore
+        // Honeypot: ignore if filled
         if (form.website && form.website.value.trim() !== '') return;
 
-        // Native validation
+        // Require valid native fields
         if (!form.reportValidity()) return;
+
+        // REQUIRE reCAPTCHA token (on deployed site Netlify injects it)
+        const hasCaptchaToken = !!form.querySelector('textarea[name="g-recaptcha-response"], input[name="g-recaptcha-response"]');
+        const tokenVal = hasCaptchaToken ? (form.querySelector('[name="g-recaptcha-response"]').value || '') : '';
+
+        if (!tokenVal) {
+          statusEl.textContent = 'Please complete the CAPTCHA before sending.';
+          statusEl.classList.remove('ok');
+          statusEl.classList.add('err','show');
+          return;
+        }
 
         sendBtn.disabled = true;
         statusEl.textContent = 'Sending…';
@@ -227,22 +220,18 @@
             body: encodeFormData(fd)
           });
 
-          if (res.ok) {
-            form.reset();
-            statusEl.textContent = 'Thanks! Your message has been sent.';
-            statusEl.classList.remove('err');
-            statusEl.classList.add('ok', 'show');
-          } else {
-            throw new Error('Network response was not OK');
-          }
+          if (!res.ok) throw new Error('Netlify rejected the submission');
+          form.reset();
+          statusEl.textContent = 'Thanks! Your message has been sent.';
+          statusEl.classList.remove('err');
+          statusEl.classList.add('ok','show');
         } catch (err){
           statusEl.textContent = 'Sorry—there was a problem sending your message. Please try again.';
           statusEl.classList.remove('ok');
-          statusEl.classList.add('err', 'show');
+          statusEl.classList.add('err','show');
         } finally {
           sendBtn.disabled = false;
-          // Auto-hide success after a few seconds (optional)
-          setTimeout(() => statusEl.classList.remove('show', 'ok'), 4000);
+          setTimeout(() => statusEl.classList.remove('show','ok'), 4000);
         }
       });
     })();
