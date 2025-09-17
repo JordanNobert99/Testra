@@ -22,7 +22,6 @@
        ========================= -->
   <header class="site-header">
     <div class="container nav">
-      <!-- Brand -->
       <a class="brand" href="index.html">
         <img src="img/logoCircle.png" alt="Testra" class="brand-logo">
         <span class="brand-name">Testra</span>
@@ -53,12 +52,13 @@
 
   <!-- =========================
        Main: Contact Form
-       (Netlify Forms + Honeypot; NO reCAPTCHA)
+       (Netlify Forms + Honeypot; NO AJAX, NO reCAPTCHA)
        ========================= -->
   <section id="contact" class="section">
     <div class="container">
       <h2 class="section__title">Send us a Message</h2>
 
+      <!-- Netlify Forms (native post to thanks.html) -->
       <form
         id="contactForm"
         class="form"
@@ -71,7 +71,7 @@
 
         <!-- Netlify mapping -->
         <input type="hidden" name="form-name" value="contact" />
-        <!-- Hidden email subject; filled dynamically -->
+        <!-- Hidden email subject; JS fills this from Name + Subject -->
         <input type="hidden" id="nlSubject" name="subject" value="Testra Contact" />
 
         <!-- Honeypot (spam trap). Keep blank. -->
@@ -120,9 +120,10 @@
           <div class="help">We reply as soon as possible. Your info is kept confidential.</div>
         </div>
 
-        <!-- Row: Submit + Status -->
+        <!-- Row: Submit -->
         <div class="form-row">
           <button type="submit" class="btn" id="sendBtn">Send Message</button>
+          <!-- (status box not needed without AJAX; keeping it harmlessly invisible) -->
           <div id="formStatus" class="status" role="status" aria-live="polite"></div>
         </div>
       </form>
@@ -194,57 +195,6 @@
       if (nameEl)  nameEl.addEventListener('input', setSubject);
       if (topicEl) topicEl.addEventListener('change', setSubject);
       setSubject();
-    })();
-
-    // Netlify AJAX submit (no reCAPTCHA)
-    (function(){
-      const form     = document.getElementById('contactForm');
-      const statusEl = document.getElementById('formStatus');
-      const sendBtn  = document.getElementById('sendBtn');
-      if (!form) return;
-
-      function encodeFormData(fd){
-        if (!fd.has('form-name')) fd.append('form-name', form.getAttribute('name') || 'contact');
-        return new URLSearchParams(fd).toString();
-      }
-
-      form.addEventListener('submit', async (e) => {
-        // If JS fails, normal POST to /thanks.html works
-        e.preventDefault();
-
-        // Honeypot check (ignore if filled)
-        if (form.website && form.website.value.trim() !== '') return;
-
-        // Require valid fields
-        if (!form.reportValidity()) return;
-
-        sendBtn.disabled = true;
-        statusEl.textContent = 'Sending…';
-        statusEl.classList.add('show');
-
-        try{
-          const fd  = new FormData(form);
-          const res = await fetch('/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: encodeFormData(fd)
-          });
-
-          if (!res.ok) throw new Error('Submission failed');
-          form.reset();
-
-          statusEl.textContent = 'Thanks! Your message has been sent.';
-          statusEl.classList.remove('err');
-          statusEl.classList.add('ok','show');
-        } catch (err){
-          statusEl.textContent = 'Sorry—there was a problem sending your message. Please try again.';
-          statusEl.classList.remove('ok');
-          statusEl.classList.add('err','show');
-        } finally {
-          sendBtn.disabled = false;
-          setTimeout(() => statusEl.classList.remove('show','ok'), 4000);
-        }
-      });
     })();
   </script>
 </body>
