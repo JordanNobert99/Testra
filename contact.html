@@ -1,40 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- =========================
+       Head
+       - Meta
+       - Fonts
+       - Global CSS
+       ========================= -->
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Testra - Contact</title>
+
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Site styles -->
   <link rel="stylesheet" href="css/style.css" />
   <link rel="icon" href="img/logoCircle.png" type="image/png" />
 </head>
 <body>
+  <!-- =========================
+       Header / Navigation
+       ========================= -->
+  <header class="site-header">
+    <div class="container nav">
+      <!-- Brand -->
+      <a class="brand" href="index.html">
+        <img src="img/logoCircle.png" alt="Testra" class="brand-logo">
+        <span class="brand-name">Testra</span>
+      </a>
 
-<header class="site-header">
-  <div class="container nav">
-    <a class="brand" href="index.html">
-      <img src="img/logoCircle.png" alt="Testra" class="brand-logo">
-      <span class="brand-name">Testra</span>
-    </a>
-    <nav class="menu">
-      <a href="index.html">Home</a>|
-      <a href="testing.html">D&A Testing</a>|
-      <a href="training.html">Computer Training</a>|
-      <a href="support.html">IT Support</a>
-      <a href="contact.html" class="btn btn--sm" id="navContactBtn">Contact Us</a>
-    </nav>
-  </div>
-</header>
+      <!-- Hamburger (≤900px via CSS) -->
+      <button
+        class="nav-toggle"
+        id="navToggle"
+        aria-label="Toggle menu"
+        aria-controls="primary-menu"
+        aria-expanded="false">
+        <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
+          <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
 
-<!-- Contact form section -->
-<section id="contact" class="section">
-  <div class="container">
-    <h2 class="section__title">Send us a Message</h2>
-      <form id="contactForm" class="form" novalidate>
-        <!-- honeypot -->
-        <input type="text" name="website" class="hp" autocomplete="off" tabindex="-1" aria-hidden="true">
+      <!-- Primary nav -->
+      <nav class="menu" id="primary-menu" role="navigation" aria-label="Main">
+        <a href="index.html">Home</a><span class="sep" aria-hidden="true">|</span>
+        <a href="testing.html">D&amp;A Testing</a><span class="sep" aria-hidden="true">|</span>
+        <a href="training.html">Computer Training</a><span class="sep" aria-hidden="true">|</span>
+        <a href="support.html">IT Support</a>
+        <a href="contact.html" class="btn btn--sm" id="navContactBtn">Contact Us</a>
+      </nav>
+    </div>
+  </header>
 
+  <!-- =========================
+       Main: Contact Form
+       Netlify Forms wiring:
+       - name="contact"
+       - method="POST"
+       - data-netlify="true"
+       - netlify-honeypot="website"  (matches our hidden field)
+       - hidden input "form-name" with same value as name
+       - action="/thanks.html" for no-JS fallback
+       ========================= -->
+  <section id="contact" class="section">
+    <div class="container">
+      <h2 class="section__title">Send us a Message</h2>
+
+      <form
+        id="contactForm"
+        class="form"
+        name="contact"
+        method="POST"
+        data-netlify="true"
+        netlify-honeypot="website"
+        action="/thanks.html"
+        novalidate
+      >
+        <!-- Netlify needs this to map the submission to your form -->
+        <input type="hidden" name="form-name" value="contact" />
+
+        <!-- Honeypot (spam trap). Hidden from humans. -->
+        <input
+          type="text"
+          name="website"
+          class="hp"
+          autocomplete="off"
+          tabindex="-1"
+          aria-hidden="true">
+
+        <!-- Row: Name + Email -->
         <div class="form-row inline">
           <div>
             <label for="name">Your Name</label>
@@ -46,6 +102,7 @@
           </div>
         </div>
 
+        <!-- Row: Phone + Subject -->
         <div class="form-row inline">
           <div>
             <label for="phone">Phone (optional)</label>
@@ -55,7 +112,7 @@
             <label for="topic">Subject</label>
             <select id="topic" name="topic" required>
               <option value="" selected disabled>Select one…</option>
-              <option>Drug & Alcohol Testing</option>
+              <option>Drug &amp; Alcohol Testing</option>
               <option>Computer Training</option>
               <option>IT Support</option>
               <option>Other</option>
@@ -63,57 +120,131 @@
           </div>
         </div>
 
+        <!-- Row: Message -->
         <div class="form-row">
           <label for="message">Message</label>
           <textarea id="message" name="message" placeholder="How can we help?" required></textarea>
           <div class="help">We reply as soon as possible. Your info is kept confidential.</div>
         </div>
 
+        <!-- Row: Submit + Status -->
         <div class="form-row">
           <button type="submit" class="btn" id="sendBtn">Send Message</button>
           <div id="formStatus" class="status" role="status" aria-live="polite"></div>
         </div>
       </form>
-  </div>
-</section>
+    </div>
+  </section>
 
-<footer class="site-footer">
-  <div class="container footer__grid">
-    <p>© <span id="year"></span> Testra</p>
-    <nav class="footer__menu">
-      <a href="index.html">Home</a>|
-      <a href="testing.html">D&A Testing</a>|
-      <a href="training.html">Computer Training</a>|
-      <a href="support.html">IT Support</a>|
-      <a href="contact.html" class="active">Contact</a>
-    </nav>
-  </div>
-</footer>
+  <!-- =========================
+       Footer
+       ========================= -->
+  <footer class="site-footer">
+    <div class="container footer__grid">
+      <p>© <span id="year"></span> Testra</p>
+      <nav class="footer__menu" aria-label="Footer">
+        <a href="index.html">Home</a>|
+        <a href="testing.html">D&amp;A Testing</a>|
+        <a href="training.html">Computer Training</a>|
+        <a href="support.html">IT Support</a>|
+        <a href="contact.html" class="active">Contact</a>
+      </nav>
+    </div>
+  </footer>
 
-<script>
-  document.getElementById('year').textContent = new Date().getFullYear();
+  <!-- =========================
+       Scripts
+       - Year stamp
+       - Mobile nav toggle
+       - Netlify AJAX submit (progressive enhancement)
+       ========================= -->
+  <script>
+    // Year stamp
+    document.getElementById('year').textContent = new Date().getFullYear();
 
-  const form = document.getElementById('contactForm');
-  const statusEl = document.getElementById('formStatus');
-  const sendBtn = document.getElementById('sendBtn');
+    // Mobile menu toggle
+    (function(){
+      const toggle = document.getElementById('navToggle');
+      const menu = document.getElementById('primary-menu');
+      if (!toggle || !menu) return;
 
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    if (form.website && form.website.value.trim() !== '') return;
+      toggle.addEventListener('click', () => {
+        const open = menu.classList.toggle('is-open');
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
 
-    if (!form.reportValidity()) return;
+      // Close on link click
+      menu.addEventListener('click', (e) => {
+        if (e.target.closest('a')) {
+          menu.classList.remove('is-open');
+          toggle.setAttribute('aria-expanded', 'false');
+        }
+      });
 
-    sendBtn.disabled = true;
-    statusEl.textContent = 'Message sent! (demo)';
-    statusEl.classList.add('show', 'ok');
+      // Close on Escape
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          menu.classList.remove('is-open');
+          toggle.setAttribute('aria-expanded', 'false');
+        }
+      });
+    })();
 
-    setTimeout(() => {
-      form.reset();
-      statusEl.classList.remove('show', 'ok');
-      sendBtn.disabled = false;
-    }, 3000);
-  });
-</script>
+    // Netlify AJAX submit (keeps user on the page with inline success)
+    (function(){
+      const form = document.getElementById('contactForm');
+      const statusEl = document.getElementById('formStatus');
+      const sendBtn = document.getElementById('sendBtn');
 
+      if (!form) return;
+
+      function encodeFormData(fd){
+        // Ensure the form-name hidden field is included
+        if (!fd.has('form-name')) fd.append('form-name', form.getAttribute('name') || 'contact');
+        return new URLSearchParams(fd).toString();
+      }
+
+      form.addEventListener('submit', async (e) => {
+        // If JS fails or is disabled, the action="/thanks.html" fallback will work.
+        e.preventDefault();
+
+        // Honeypot check: if filled, silently ignore
+        if (form.website && form.website.value.trim() !== '') return;
+
+        // Native validation
+        if (!form.reportValidity()) return;
+
+        sendBtn.disabled = true;
+        statusEl.textContent = 'Sending…';
+        statusEl.classList.add('show');
+
+        try{
+          const fd = new FormData(form);
+          const res = await fetch('/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: encodeFormData(fd)
+          });
+
+          if (res.ok) {
+            form.reset();
+            statusEl.textContent = 'Thanks! Your message has been sent.';
+            statusEl.classList.remove('err');
+            statusEl.classList.add('ok', 'show');
+          } else {
+            throw new Error('Network response was not OK');
+          }
+        } catch (err){
+          statusEl.textContent = 'Sorry—there was a problem sending your message. Please try again.';
+          statusEl.classList.remove('ok');
+          statusEl.classList.add('err', 'show');
+        } finally {
+          sendBtn.disabled = false;
+          // Auto-hide success after a few seconds (optional)
+          setTimeout(() => statusEl.classList.remove('show', 'ok'), 4000);
+        }
+      });
+    })();
+  </script>
 </body>
 </html>

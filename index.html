@@ -5,26 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Testra - Home</title>
 
-  <!-- Optional: modern font (free). Remove if you want system fonts only. -->
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
+  <!-- Site styles -->
   <link rel="stylesheet" href="css/style.css" />
   <link rel="icon" href="img/logoCircle.png" type="image/png" />
 </head>
 <body>
 
-  <!-- Top bar -->
+  <!-- Header / Nav (sticky + opaque via CSS) -->
   <header class="site-header">
     <div class="container nav">
       <a class="brand" href="index.html">
         <img src="img/logoCircle.png" alt="Testra" class="brand-logo">
         <span class="brand-name">Testra</span>
       </a>
-      <nav class="menu">
-        <a href="index.html" class="active">Home</a>|
-        <a href="testing.html">D&A Testing</a>|
-        <a href="training.html">Computer Training</a>|
+
+      <!-- Hamburger (shown only ≤900px by CSS) -->
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-controls="primary-menu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
+          <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+
+      <nav class="menu" id="primary-menu">
+        <a href="index.html" class="active">Home</a><span class="sep" aria-hidden="true">|</span>
+        <a href="testing.html">D&A Testing</a><span class="sep" aria-hidden="true">|</span>
+        <a href="training.html">Computer Training</a><span class="sep" aria-hidden="true">|</span>
         <a href="support.html">IT Support</a>
         <a href="contact.html" class="btn btn--sm" id="navContactBtn">Contact Us</a>
       </nav>
@@ -37,14 +45,13 @@
       <div class="hero__copy">
         <h1>Professional Solutions in <span class="accent">IT</span> &amp; Workplace Safety</h1>
         <p class="lead">
-          Reliable IT support and certified drug & alcohol testing services tailored for individuals and businesses.
+          Reliable IT support and certified drug &amp; alcohol testing services tailored for individuals and businesses.
         </p>
         <div class="hero__cta">
-          <a href="#services" class="btn btn--dark btn--lg">Our Services</a>
+          <a href="#services" class="btn btn--lg">Our Services</a>
         </div>
       </div>
       <div class="hero__art" aria-hidden="true">
-        <!-- subtle geometric art -->
         <div class="orb"></div><div class="orb orb--2"></div><div class="orb orb--3"></div>
       </div>
     </div>
@@ -53,9 +60,6 @@
     <svg class="wave" viewBox="0 0 1440 110" preserveAspectRatio="none" aria-hidden="true">
       <path d="M0,48 C240,120 480,0 720,48 C960,96 1200,96 1440,48 L1440,120 L0,120 Z"></path>
     </svg>
-    <svg class="wave flipped" viewBox="0 0 1440 110" preserveAspectRatio="none">
-      <path d="M0,48 C240,120 480,0 720,48 C960,96 1200,96 1440,48 L1440,110 L0,110 Z"></path>
-    </svg>
   </section>
 
   <!-- Services -->
@@ -63,17 +67,17 @@
     <div class="container">
       <h2 class="section__title">What we do</h2>
       <div class="grid">
+
         <!-- Card 1 -->
         <article class="card">
           <div class="card__icon" aria-hidden="true">
-            <!-- shield icon -->
             <svg viewBox="0 0 24 24"><path d="M12 2l7 3v6c0 5-3.5 9.5-7 11-3.5-1.5-7-6-7-11V5l7-3z"/></svg>
           </div>
           <h3>Drug &amp; Alcohol Testing</h3>
           <ul class="list">
             <li>DOT-compliant</li>
             <li>BAT and POCT certified</li>
-            <li>Pre & post-incident</li>
+            <li>Pre &amp; post-incident</li>
             <li>Confidential handling</li>
           </ul>
           <a class="btn btn--block" href="testing.html">Learn More</a>
@@ -82,12 +86,11 @@
         <!-- Card 2 -->
         <article class="card">
           <div class="card__icon" aria-hidden="true">
-            <!-- laptop icon -->
             <svg viewBox="0 0 24 24"><path d="M3 5h18v10H3zM0 18h24v2H0z"/></svg>
           </div>
           <h3>Computer Training</h3>
           <ul class="list">
-            <li>Basic & intermediate skills</li>
+            <li>Basic &amp; intermediate skills</li>
             <li>iPhone / Android</li>
             <li>Google Apps</li>
             <li>Custom lessons</li>
@@ -98,18 +101,18 @@
         <!-- Card 3 -->
         <article class="card">
           <div class="card__icon" aria-hidden="true">
-            <!-- wrench icon -->
             <svg viewBox="0 0 24 24"><path d="M22 19l-7-7a5 5 0 10-7 7l7 7 7-7zM7 9a2 2 0 110-4 2 2 0 010 4z"/></svg>
           </div>
           <h3>IT Support</h3>
           <ul class="list">
-            <li>Websites & software support</li>
-            <li>Networking & diagnostics</li>
+            <li>Websites &amp; software support</li>
+            <li>Networking &amp; diagnostics</li>
             <li>On-site or remote</li>
             <li>Small-business friendly</li>
           </ul>
           <a class="btn btn--block" href="support.html">Learn More</a>
         </article>
+
       </div>
     </div>
   </section>
@@ -119,8 +122,8 @@
     <div class="container footer__grid">
       <p>© <span id="year"></span> Testra</p>
       <nav class="footer__menu">
-        <a href="index.html">Home</a>|
-        <a href="testing.html">D&A Testing</a>|
+        <a href="index.html" class="active">Home</a>|
+        <a href="testing.html">D&amp;A Testing</a>|
         <a href="training.html">Computer Training</a>|
         <a href="support.html">IT Support</a>|
         <a href="contact.html">Contact</a>
@@ -128,9 +131,36 @@
     </div>
   </footer>
 
+  <!-- Scripts -->
   <script>
     // current year
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    // mobile menu toggle
+    (function(){
+      const toggle = document.getElementById('navToggle');
+      const menu = document.getElementById('primary-menu');
+      if (!toggle || !menu) return;
+
+      toggle.addEventListener('click', () => {
+        const open = menu.classList.toggle('is-open');
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+
+      menu.addEventListener('click', (e) => {
+        if (e.target.closest('a')) {
+          menu.classList.remove('is-open');
+          toggle.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          menu.classList.remove('is-open');
+          toggle.setAttribute('aria-expanded', 'false');
+        }
+      });
+    })();
   </script>
 </body>
 </html>
