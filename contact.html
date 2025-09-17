@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Head -->
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Testra - Contact</title>
@@ -12,9 +13,11 @@
   <!-- Site styles -->
   <link rel="stylesheet" href="css/style.css" />
   <link rel="icon" href="img/logoCircle.png" type="image/png" />
+
+  <!-- Google reCAPTCHA v2 (checkbox) -->
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
-
   <!-- Header / Nav -->
   <header class="site-header">
     <div class="container nav">
@@ -23,7 +26,6 @@
         <span class="brand-name">Testra</span>
       </a>
 
-      <!-- Hamburger (shown via CSS ≤900px) -->
       <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-controls="primary-menu" aria-expanded="false">
         <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
           <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -40,17 +42,12 @@
     </div>
   </header>
 
-  <!-- Contact form (Netlify Forms + reCAPTCHA v2) -->
+  <!-- Contact form (Netlify Forms + BYO reCAPTCHA v2) -->
   <section id="contact" class="section">
     <div class="container">
       <h2 class="section__title">Send us a Message</h2>
 
-      <!-- IMPORTANT:
-           - data-netlify="true" OR netlify attribute
-           - name="contact" + <input name="form-name">
-           - netlify-honeypot matches the hidden field
-           - data-netlify-recaptcha on form AND a <div> placeholder
-           - action is a non-AJAX fallback -->
+      <!-- Netlify Forms wiring -->
       <form
         id="contactForm"
         class="form"
@@ -58,16 +55,15 @@
         method="POST"
         data-netlify="true"
         netlify-honeypot="website"
-        data-netlify-recaptcha="true"
         action="/thanks.html"
         novalidate>
 
-        <!-- Netlify needs this to map to your form -->
+        <!-- Netlify mapping -->
         <input type="hidden" name="form-name" value="contact" />
-        <!-- Hidden email subject that we will fill from your "Subject" select -->
+        <!-- Hidden email subject; we fill it dynamically -->
         <input type="hidden" id="nlSubject" name="subject" value="Testra Contact" />
 
-        <!-- Honeypot (spam trap). Keep blank. -->
+        <!-- Honeypot -->
         <input type="text" name="website" class="hp" autocomplete="off" tabindex="-1" aria-hidden="true">
 
         <div class="form-row inline">
@@ -104,9 +100,15 @@
           <div class="help">We reply as soon as possible. Your info is kept confidential.</div>
         </div>
 
-        <!-- Netlify-provided reCAPTCHA placeholder (rendered after deploy) -->
+        <!-- Visible reCAPTCHA -->
         <div class="form-row">
-          <div data-netlify-recaptcha="true"></div>
+          <div
+            class="g-recaptcha"
+            data-sitekey="6Lfw7cwrAAAAAIjjAjSrWxa-VFmuk2W0c_tz93AR">
+          </div>
+          <noscript>
+            <div class="help">reCAPTCHA needs JavaScript enabled.</div>
+          </noscript>
         </div>
 
         <div class="form-row">
@@ -131,6 +133,7 @@
     </div>
   </footer>
 
+  <!-- Scripts -->
   <script>
     // Year stamp
     document.getElementById('year').textContent = new Date().getFullYear();
@@ -158,15 +161,14 @@
       });
     })();
 
-    // Build dynamic email subject from inputs (used by Netlify notifications)
+    // Dynamic email subject (for Netlify notifications)
     (function(){
       const nameEl = document.getElementById('name');
       const topicEl = document.getElementById('topic');
       const subjEl  = document.getElementById('nlSubject');
-
       function setSubject(){
-        const topic = (topicEl && topicEl.value) ? topicEl.value : 'General';
-        const name  = (nameEl && nameEl.value) ? nameEl.value.trim() : 'Visitor';
+        const topic = topicEl && topicEl.value ? topicEl.value : 'General';
+        const name  = nameEl && nameEl.value ? nameEl.value.trim() : 'Visitor';
         subjEl.value = `Testra Contact — ${topic} from ${name}`;
       }
       if (nameEl)  nameEl.addEventListener('input', setSubject);
@@ -174,12 +176,11 @@
       setSubject();
     })();
 
-    // Netlify AJAX submit WITH reCAPTCHA enforcement
+    // Netlify AJAX submit with reCAPTCHA enforcement
     (function(){
       const form     = document.getElementById('contactForm');
       const statusEl = document.getElementById('formStatus');
       const sendBtn  = document.getElementById('sendBtn');
-
       if (!form) return;
 
       function encodeFormData(fd){
@@ -188,23 +189,22 @@
       }
 
       form.addEventListener('submit', async (e) => {
-        // If JS fails, the normal POST to /thanks.html still works
+        // If JS fails, normal POST to /thanks.html works
         e.preventDefault();
 
-        // Honeypot: ignore if filled
+        // Honeypot check
         if (form.website && form.website.value.trim() !== '') return;
 
-        // Require valid native fields
+        // Require valid fields
         if (!form.reportValidity()) return;
 
-        // REQUIRE reCAPTCHA token (on deployed site Netlify injects it)
-        const hasCaptchaToken = !!form.querySelector('textarea[name="g-recaptcha-response"], input[name="g-recaptcha-response"]');
-        const tokenVal = hasCaptchaToken ? (form.querySelector('[name="g-recaptcha-response"]').value || '') : '';
-
-        if (!tokenVal) {
+        // REQUIRE reCAPTCHA token from Google widget
+        const tokenField = document.querySelector('[name="g-recaptcha-response"]');
+        const token = tokenField ? tokenField.value : '';
+        if (!token) {
           statusEl.textContent = 'Please complete the CAPTCHA before sending.';
           statusEl.classList.remove('ok');
-          statusEl.classList.add('err','show');
+          statusEl.classList.add('err', 'show');
           return;
         }
 
@@ -214,14 +214,22 @@
 
         try{
           const fd = new FormData(form);
+          // Include the token explicitly (Netlify expects this field)
+          if (!fd.has('g-recaptcha-response') && token) {
+            fd.append('g-recaptcha-response', token);
+          }
+
           const res = await fetch('/', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: encodeFormData(fd)
           });
 
-          if (!res.ok) throw new Error('Netlify rejected the submission');
+          if (!res.ok) throw new Error('Submission failed');
           form.reset();
+          // reset captcha so user can send another message without reload
+          if (window.grecaptcha) window.grecaptcha.reset();
+
           statusEl.textContent = 'Thanks! Your message has been sent.';
           statusEl.classList.remove('err');
           statusEl.classList.add('ok','show');
