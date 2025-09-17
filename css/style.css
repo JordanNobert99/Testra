@@ -324,6 +324,20 @@ input:focus-visible, textarea:focus-visible, select:focus-visible{
 .btn[disabled]{ opacity:.7; cursor:not-allowed }
 .hp{ position:absolute; left:-10000px; width:1px; height:1px; overflow:hidden }
 
+/* === Contact form: center reCAPTCHA === */
+#contactForm .g-recaptcha {
+  display: block;
+  margin: .5rem auto;  /* centers the 304px-wide widget */
+}
+
+/* Optional: tiny phones can scale it down a bit */
+@media (max-width: 360px){
+  #contactForm .g-recaptcha {
+    transform: scale(.9);
+    transform-origin: center;
+  }
+}
+
 
 /* ======================================
    10) Anchor Offsets (for sticky header)
