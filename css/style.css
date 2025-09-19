@@ -339,7 +339,7 @@ input:focus-visible, textarea:focus-visible, select:focus-visible{
 }
 form .help { justify-self: center; }
 form .btn  { width: 200px; justify-self: center; }
-.anchor-offset{ scroll-margin-top: var(--header-h); }
+.anchor-offset{ scroll-margin-top: var(--header-h) + var(--extra-gap); }
 
 
 /* ======================================
