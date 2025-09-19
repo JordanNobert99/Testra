@@ -48,7 +48,9 @@
   --focus: 0 0 0 3px rgba(58,123,255,.35);
 
   --header-h: 230px;    /* sticky header height for anchor offsets */
-  --scroll-extra: -260px; /* extra offset so anchors land lower than the header */
+  --scroll-extra: 100px; /* extra offset so anchors land lower than the header */
+  --overshoot: 120px; /* how much further down you want to land */
+
 }
 
 
@@ -343,7 +345,7 @@ input:focus-visible, textarea:focus-visible, select:focus-visible{
 }
 form .help { justify-self: center; }
 form .btn  { width: 200px; justify-self: center; }
-.anchor-offset{ scroll-margin-top: calc(var(--header-h) + var(--scroll-extra)); }
+.anchor-offset{ scroll-margin-top: calc(var(--header-h) + var(--scroll-extra) + var(--overshoot)); }
 
 
 /* ======================================
