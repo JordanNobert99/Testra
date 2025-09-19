@@ -48,6 +48,7 @@
   --focus: 0 0 0 3px rgba(58,123,255,.35);
 
   --header-h: 230px;    /* sticky header height for anchor offsets */
+  --extra-gap: 50px;
 }
 
 
@@ -329,7 +330,7 @@ input:focus-visible, textarea:focus-visible, select:focus-visible{
    10) Anchor Offsets (for sticky header)
    ====================================== */
 #services, #courses, #it-services, #contact{
-  scroll-margin-top: var(--header-h);
+  scroll-margin-top: var(--header-h) + var(--extra-gap);
   padding: 0 0 30px 0;
 }
 #contact .section__title{
