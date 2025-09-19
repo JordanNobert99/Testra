@@ -48,7 +48,7 @@
   --focus: 0 0 0 3px rgba(58,123,255,.35);
 
   --header-h: 230px;    /* sticky header height for anchor offsets */
-  --scroll-extra: 200px; /* extra offset so anchors land lower than the header */
+  --scroll-extra: 20px; /* extra offset so anchors land lower than the header */
 }
 
 
