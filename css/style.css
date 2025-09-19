@@ -47,7 +47,7 @@
 
   --focus: 0 0 0 3px rgba(58,123,255,.35);
 
-  --header-h: 230px;    /* sticky header height for anchor offsets */
+  --header-h: 280px;    /* sticky header height for anchor offsets */
 }
 
 
@@ -152,7 +152,7 @@ img{ max-width:100%; height:auto; display:block; }
   box-shadow: var(--shadow);
   transition: transform .06s ease, box-shadow .2s ease, opacity .2s ease, filter .2s ease;
 }
-.btn:hover{ transform: translateY(-1px) }
+.btn:hover{ transform: translateY(-2px) }
 .btn:active{ transform: translateY(0) }
 .btn:focus-visible{ outline: none; box-shadow: var(--focus) }
 
