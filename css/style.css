@@ -49,7 +49,7 @@
 
   --header-h: 230px;    /* sticky header height for anchor offsets */
   --scroll-extra: 100px; /* extra offset so anchors land lower than the header */
-  --overshoot: 120px; /* how much further down you want to land */
+  --overshoot: -120px; /* how much further down you want to land */
 
 }
 
