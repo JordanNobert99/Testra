@@ -47,7 +47,8 @@
 
   --focus: 0 0 0 3px rgba(58,123,255,.35);
 
-  --header-h: 100px;    /* sticky header height for anchor offsets */
+  --header-h: 230px;    /* sticky header height for anchor offsets */
+  --scroll-extra: 80px; /* extra offset so anchors land lower than the header */
 }
 
 
@@ -59,7 +60,11 @@
 * { box-sizing: border-box; }
 
 html, body { margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  /* global landing offset for all in-page anchors */
+  scroll-padding-top: calc(var(--header-h) + var(--scroll-extra));
+}
 
 body{
   font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
@@ -329,7 +334,7 @@ input:focus-visible, textarea:focus-visible, select:focus-visible{
    10) Anchor Offsets (for sticky header)
    ====================================== */
 #services, #courses, #it-services, #contact{
-  scroll-margin-top: var(--header-h);
+  scroll-margin-top: calc(var(--header-h) + var(--scroll-extra));
   padding: 0 0 30px 0;
 }
 #contact .section__title{
@@ -338,7 +343,7 @@ input:focus-visible, textarea:focus-visible, select:focus-visible{
 }
 form .help { justify-self: center; }
 form .btn  { width: 200px; justify-self: center; }
-.anchor-offset{ scroll-margin-top: var(--header-h); }
+.anchor-offset{ scroll-margin-top: calc(var(--header-h) + var(--scroll-extra)); }
 
 
 /* ======================================
@@ -405,7 +410,10 @@ form .btn  { width: 200px; justify-self: center; }
 @media (max-width:900px){
 
   /* shorter anchor offset on mobile */
-  :root{ --header-h: 72px; }
+  :root{
+    --header-h: 72px;
+    --scroll-extra: 48px; /* smaller bump on small screens */
+  }
 
   /* Center hero text and layout */
   .hero__inner{ grid-template-columns:1fr; text-align:center; justify-items:center }
