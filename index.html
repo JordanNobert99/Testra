@@ -5,12 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Testra - Home</title>
 
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
   <!-- Site styles -->
   <link rel="stylesheet" href="css/style.css" />
   <link rel="icon" href="img/logoCircle.png" type="image/png" />
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4SWJDR2GB4">
+</script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-4SWJDR2GB4');
+</script>
 </head>
 <body>
 
@@ -29,9 +40,9 @@
         </svg>
       </button>
 
-      <nav class="menu" id="primary-menu">
+      <nav class="menu" id="primary-menu" role="navigation" aria-label="Main">
         <a href="index.html" class="active">Home</a><span class="sep" aria-hidden="true">|</span>
-        <a href="testing.html">D&A Testing</a><span class="sep" aria-hidden="true">|</span>
+        <a href="testing.html">D&amp;A Testing</a><span class="sep" aria-hidden="true">|</span>
         <a href="training.html">Computer Training</a><span class="sep" aria-hidden="true">|</span>
         <a href="support.html">IT Support</a>
         <a href="contact.html" class="btn btn--sm" id="navContactBtn">Contact Us</a>
@@ -56,7 +67,7 @@
       </div>
     </div>
 
-    <!-- divider wave -->
+    <!-- divider wave (next section background auto-matches via CSS) -->
     <svg class="wave" viewBox="0 0 1440 110" preserveAspectRatio="none" aria-hidden="true">
       <path d="M0,48 C240,120 480,0 720,48 C960,96 1200,96 1440,48 L1440,120 L0,120 Z"></path>
     </svg>
@@ -121,7 +132,7 @@
   <footer class="site-footer">
     <div class="container footer__grid">
       <p>© <span id="year"></span> Testra</p>
-      <nav class="footer__menu">
+      <nav class="footer__menu" aria-label="Footer">
         <a href="index.html" class="active">Home</a>|
         <a href="testing.html">D&amp;A Testing</a>|
         <a href="training.html">Computer Training</a>|
@@ -147,6 +158,7 @@
         toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
       });
 
+      // close menu when clicking a link
       menu.addEventListener('click', (e) => {
         if (e.target.closest('a')) {
           menu.classList.remove('is-open');
@@ -154,6 +166,7 @@
         }
       });
 
+      // close on Escape
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
           menu.classList.remove('is-open');
