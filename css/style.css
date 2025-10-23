@@ -1,497 +1,376 @@
-/* =========================================================
-   Testra — Site Stylesheet
-   Organized & Commented
-   =========================================================
-   TABLE OF CONTENTS
-   1) CSS Variables
-   2) Base / Resets
-   3) Layout Container
-   4) Header & Navigation (desktop baseline)
-   5) Buttons
-   6) Hero (copy + orbs) & Waves / Background continuity
-   7) Sections & Cards (grids, lists)
-   8) Footer
-   9) Forms
-   10) Anchor Offsets
-   11) Page-Specific: Bottom “solo” cards (Training/Testing/Support)
-   12) Desktop-Only Tweaks (≥901px)
-   13) Mobile / Small Screen (≤900px)
-   14) Page-Specific Layout: Contact page only
-   15) Utilities
-   ========================================================= */
+/* ===========================
+   Testra UI — style2.css (complete)
+   =========================== */
 
-
-/* ======================================
-   1) CSS Variables
-   ====================================== */
+/* ---- Design tokens ---- */
 :root{
   --bg: #0b1220;
-  --fg: #e6edf3;
-  --text: #e8ecf3;
-  --muted: #94a3b8;
-
-  --surface: #101826;   /* wave + the first section after hero */
-  --nav-bg: #0f1a2b;    /* opaque navbar */
-
-  --card: #151c2b;
+  --surface: #0e1730;
+  --card: #151c2b;                 /* solid (no blur) */
   --border: rgba(255,255,255,0.12);
-
+  --text: #e8ecf3;
+  --muted: #a9b3c7;
   --brand: #3a7bff;
   --brand-2: #6ae0ff;
-  --accent: #6ea8ff;
-
   --shadow: 0 10px 30px rgba(0,0,0,.25);
-
   --radius: 16px;
-  --radius-sm: 12px;
 
-  --focus: 0 0 0 3px rgba(58,123,255,.35);
+  --focus: 0 0 0 3px color-mix(in oklab, white 20%, var(--brand));
+  --header-h: 80px;
 
-  --header-h: 230px;    /* sticky header height for anchor offsets */
-  --extra-gap: 20px;
+  /* gradients */
+  --g-brand: radial-gradient(1200px 1200px at 80% -10%,
+     rgba(58,123,255,.18), transparent 50%),
+     radial-gradient(800px 800px at -10% 10%,
+     rgba(106,224,255,.12), transparent 45%);
 }
 
-
-/* ======================================
-   2) Base / Resets
-   ====================================== */
-@keyframes spin { from { transform: rotate(0) } to { transform: rotate(360deg) } }
-
-* { box-sizing: border-box; }
-
-html, body { margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-
+/* ---- CSS reset (modern) ---- */
+*,*::before,*::after{ box-sizing: border-box }
+html,body{ height:100% }
+body,h1,h2,h3,h4,p,figure,blockquote,dl,dd{ margin:0 }
+ul[role='list'],ol[role='list']{ list-style:none }
 body{
-  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+  line-height:1.5; -webkit-font-smoothing: antialiased;
+  background: var(--bg);
   color: var(--text);
-  line-height: 1.6;
-
-  /* starry blue backdrop */
-  background:
-    radial-gradient(1200px 600px at 10% -10%, rgba(58,123,255,.18), transparent 60%),
-    radial-gradient(800px 400px at 110% 10%, rgba(106,224,255,.12), transparent 60%),
-    var(--bg);
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 }
+img,picture,video,canvas,svg{ display:block; max-width:100% }
+input,button,textarea,select{ font: inherit }
+p, h1, h2, h3, h4{ overflow-wrap:anywhere }
+a{ color:inherit }
 
-img{ max-width:100%; height:auto; display:block; }
+/* ---- Base ---- */
+.container{ width:min(1100px, 92%); margin-inline:auto }
 
-/* a general muted text helper (used in Testing page copy) */
-.muted { color: var(--muted); }
-
-
-/* ======================================
-   3) Layout Container
-   ====================================== */
-.container{ width: min(1100px, 92%); margin-inline: auto; }
-
-
-/* ======================================
-   4) Header & Navigation (desktop baseline)
-   ====================================== */
+/* ---- Header ---- */
 .site-header{
-  /* sticky & opaque header */
-  position: -webkit-sticky !important;  /* Safari */
-  position: sticky !important;
-  top: 0;
-  z-index: 9999;
-  background: var(--nav-bg);
+  position: sticky; top:0; z-index: 50;
+  background: color-mix(in oklab, var(--surface) 86%, transparent);
   border-bottom: 1px solid var(--border);
-  -webkit-backdrop-filter: none;
-  backdrop-filter: none;
 }
-
 .nav{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 0;
-  color: var(--muted);
-  margin: 0 1rem;
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 14px 0px; color: var(--muted);
+  margin: 0 1rem 0 1rem;
   width: auto;
-  position: relative;  /* anchors the mobile dropdown */
 }
-
-.brand{
-  display: flex; align-items: center; gap: .5rem;
-  text-decoration: none; color: var(--text);
-  padding-right: 30px; margin-right: 30px;
-}
-.brand-logo{ height:32px; width:auto; border-radius:50% }
-.brand-logo:hover{ animation: spin .2s linear 1 }
+.brand{ display:flex; align-items:center; gap:.5rem; text-decoration:none; color:var(--text); padding-right: 30px }
+.brand-logo{ width:36px; height:36px; border-radius:50%; box-shadow: var(--shadow) }
 .brand-name{ font-weight:700; letter-spacing:.2px }
 
-/* Primary menu (desktop baseline) */
 .menu{
-  display:flex; gap:.6rem; align-items:center; flex-wrap:wrap;
+  display:flex; align-items:center; gap:.8rem; flex-wrap:wrap;
 }
 .menu a{
-  color: var(--muted);
-  text-decoration:none;
-  padding:.4rem 1rem;
-  border-radius:10px;
-  transition: color .15s ease, background .15s ease;
+  text-decoration:none; color:var(--muted);
+  padding:.35rem .5rem; border-radius:10px;
+  transition: color .2s ease, background .2s ease;
 }
-.menu a:hover{ color:var(--text); background: color-mix(in oklab, var(--card) 80%, transparent) }
-.menu .active{ color:var(--text) }
+.menu a:hover{ color:white; background: rgba(255,255,255,.04) }
+.menu a.active{ color:white; background: rgba(58,123,255,.15) }
+.menu .btn{ margin-left:.5rem }
 
-/* Hamburger button (shown in mobile media query) */
-.nav-toggle{ display:none; }
-
-
-/* ======================================
-   5) Buttons
-   ====================================== */
+/* ---- Buttons ---- */
 .btn{
   display:inline-flex; align-items:center; justify-content:center;
-  padding:.8rem 1.1rem;
-  border-radius:12px;
-  text-decoration:none;
-  font-weight:600;
-  color:#fff;
-  background: linear-gradient(135deg, var(--brand), var(--brand-2));
+  gap:.5rem; text-decoration:none; user-select:none;
+  height: 42px; padding-inline: 16px;
+  border-radius: 12px; border:1px solid var(--border);
+  background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.01));
+  color: var(--text); font-weight:600; letter-spacing:.2px;
   box-shadow: var(--shadow);
-  transition: transform .06s ease, box-shadow .2s ease, opacity .2s ease, filter .2s ease;
+  transition: transform .06s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease;
 }
-.btn:hover{ transform: translateY(-2px) }
-.btn:active{ transform: translateY(0) }
-.btn:focus-visible{ outline: none; box-shadow: var(--focus) }
+.btn:hover{ transform: translateY(-1px); border-color: color-mix(in oklab, white 12%, var(--border)); }
+.btn:active{ transform: translateY(0) scale(.99); }
+.btn:focus-visible{ outline:none; box-shadow: var(--focus) }
 
-.btn--ghost{ background:transparent; color:var(--text); border:1px solid var(--border); box-shadow:none }
-.btn--block{ width:100% }
-.btn--sm{ padding:.55rem .8rem; border-radius:10px; box-shadow:none }
-.btn--lg{ padding:1rem 1.25rem; font-size:1.05rem }
-.btn--light{ background:#fff; color:#111; box-shadow: var(--shadow) }
-#navContactBtn{ color:#fff } /* ensure white text in gradient button */
+.btn--sm{ height:36px; padding-inline:12px; border-radius:10px }
+.btn--lg{ height:48px; padding-inline:22px; border-radius:14px }
 
+.btn--dark{
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.12));
+  border-color: rgba(255,255,255,.18);
+}
+.btn--ghost{
+  background: transparent;
+  border-color: rgba(255,255,255,.18);
+  backdrop-filter: blur(6px);
+}
 
-/* ======================================
-   6) Hero (copy + orbs) & Waves / Background continuity
-   ====================================== */
+/* ---- Hero ---- */
 .hero{
-  position:relative;
-  overflow:hidden;
-  background:
-    radial-gradient(900px 500px at -10% 0%, rgba(58,123,255,.28), transparent 60%),
-    radial-gradient(700px 400px at 120% -10%, rgba(106,224,255,.22), transparent 60%);
+  position: relative; overflow: clip;
+  background: var(--g-brand);
+  isolation:isolate;
 }
-
 .hero__inner{
-  display:grid; grid-template-columns: 1.1fr .9fr;
-  gap:2rem; align-items:center;
-  padding: clamp(48px, 8vw, 96px) 0 10px;
-  min-height: 500px;
+  min-height: clamp(420px, 52vh, 620px);
+  display:grid; grid-template-columns: 1.2fr 1fr; align-items:center; gap: 24px;
+  padding-top: 24px; padding-bottom: 24px;
 }
-
 .hero__copy h1{
-  font-size: clamp(1.9rem, 3.6vw, 3rem);
-  line-height:1.15;
-  margin: 0 0 .8rem 0;
-  max-width: 520px;
+  font-size: clamp(34px, 4vw, 46px);
+  line-height:1.05; letter-spacing:.2px; margin-bottom:.6rem;
 }
+.lead{ font-size: clamp(16px, 2vw, 18px); color: var(--muted) }
+.hero__copy .hero__cta{ display:flex; gap:.6rem; margin-top:1.1rem; flex-wrap:wrap }
 
-.hero .lead{ color:var(--muted); max-width: 60ch; margin:0 0 1.4rem 0 }
-.hero__cta{ display:flex; gap:.8rem; flex-wrap:wrap }
-
-.accent{
-  background: linear-gradient(135deg, var(--brand), var(--brand-2));
-  -webkit-background-clip: text; background-clip: text; color: transparent;
+.hero__art{
+  position: relative; min-height: 360px;
 }
-
-/* Hero art — orbs */
-.hero__art{ position:relative; min-height:260px }
 .orb{
-  position:absolute; right:12%; top:8%;
-  width:160px; height:160px; border-radius:50%;
-  background: radial-gradient(circle at 30% 30%, #8ac7ff, #3a7bff 60%, transparent 62%);
-  filter: saturate(1.05);
-  opacity:.8;
-  pointer-events:none;
+  position:absolute; inset:auto 0 0 auto;
+  width: 380px; height:380px; border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(106,224,255,.7), rgba(58,123,255,.25) 60%, rgba(255,255,255,.0) 62%);
+  filter: blur(1px);
+  transform: translate(20px, -10px);
+  animation: float 8s ease-in-out infinite;
 }
-.orb--2{ width:220px; height:220px; right:2%; top:40%; opacity:.35 }
-.orb--3{ width:120px; height:120px; right:35%; top:55%; opacity:.25 }
-
-/* Waves (SVGs under hero) */
-.wave{ display:block; width:100%; height:130px; fill:var(--surface) }
-.wave.flipped{ transform: rotate(180deg) }
-
-/* Background continuity: first section after hero matches the wave color */
-.hero + .section{ background: var(--surface); }
-
-/* Also make each page’s bottom solo section match section above it */
-#courses + .section,
-#services + .section,
-#it-services + .section{
-  background: var(--surface);
+.orb--2{
+  width: 220px; height:220px; right: 20%; top: 4%;
+  background: radial-gradient(circle at 40% 30%, rgba(58,123,255,.65), rgba(106,224,255,.2) 60%, rgba(255,255,255,.0) 62%);
+  animation-duration: 10s;
+}
+.orb--3{
+  width: 160px; height:160px; right: 8%; top: 38%;
+  background: radial-gradient(circle at 40% 30%, rgba(106,224,255,.55), rgba(58,123,255,.18) 60%, rgba(255,255,255,.0) 62%);
+  animation-duration: 12s;
 }
 
+@keyframes float{
+  0%,100%{ transform: translate(20px,-10px) }
+  50%{ transform: translate(8px,-20px) }
+}
 
-/* ======================================
-   7) Sections & Cards (grids, lists)
-   ====================================== */
-.section{ padding:56px 0 }
-.section__title{ font-size:1.6rem; margin:0 0 1.2rem 0 }
+/* Hero wave separators */
+.wave{
+  position:relative; display:block; width:100%; height:110px; margin-top:-2px;
+  fill: color-mix(in oklab, var(--surface) 88%, transparent);
+}
+.wave.flipped{ transform: scaleY(-1) translateY(-1px) }
 
-/* Default grid: 3 columns on desktop */
+/* ---- Sections ---- */
+.section{ padding: 48px 0 }
+.section__title{
+  font-size: clamp(22px, 3vw, 28px);
+  margin-bottom: 16px; letter-spacing:.2px;
+}
+
+/* ---- Cards & Grid ---- */
 .grid{
-  display:grid;
-  gap:1.2rem;
-  grid-template-columns: repeat(3, 1fr);
+  display:grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
 }
-
-/* Balanced layout: if EXACTLY 4 cards, render a 2×2 on desktop */
-@media (min-width:901px){
-  .grid:has(> .card:nth-child(4):last-child){
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
 .card{
-  background: var(--card);
-  border:1px solid var(--border);
+  background: color-mix(in oklab, var(--card) 86%, transparent);
+  border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 1.2rem;
+  padding: 16px 16px 14px 16px;
   box-shadow: var(--shadow);
-  transition: transform .1s ease, box-shadow .25s ease, border-color .2s ease;
 }
-.card:hover{ transform: translateY(-2px); box-shadow: 0 16px 36px rgba(0,0,0,.18) }
-
-.card__icon{
-  width:44px; height:44px; border-radius:12px;
-  display:grid; place-items:center;
-  background: linear-gradient(135deg, var(--brand), var(--brand-2));
-  box-shadow: var(--shadow);
-  margin-bottom:.6rem;
+.card h3{
+  font-size: 18px; margin-bottom: 6px;
 }
-.card__icon svg{ width:22px; height:22px; fill:#fff }
+.card .muted{ margin-bottom: 6px }
 
-.card h3{ margin:.4rem 0 .2rem 0; font-size:1.1rem }
+.card .btn{ margin-top: 10px }
 
-.list{ margin:.4rem 0 1rem 0; padding-left:1rem; color:var(--muted) }
-.list li{ margin:.25rem 0 }
+/* ---- Lists ---- */
+.list{
+  display:grid; gap:.4rem;
+  padding-left: 1rem; margin: .4rem 0 0 0;
+}
+.list li{ color: var(--text) }
 
-
-/* ======================================
-   8) Footer
-   ====================================== */
+/* ---- Footer ---- */
 .site-footer{
-  background: var(--surface);
-  border-top:1px solid var(--border);
-  padding:22px 0;
-  color:var(--muted);
+  border-top: 1px solid var(--border);
+  background: color-mix(in oklab, var(--surface) 86%, transparent);
+  padding: 18px 0;
 }
 .footer__grid{
   display:flex; align-items:center; justify-content:space-between; gap:1rem;
+  color: var(--muted);
 }
-.footer__menu{ display:flex; gap:1rem; flex-wrap:wrap }
-.footer__menu a{ color:var(--muted); text-decoration:none }
-.footer__menu a:hover{ color:var(--text) }
+.footer__menu{
+  display:flex; align-items:center; gap:.8rem; flex-wrap:wrap;
+}
+.footer__menu a{
+  text-decoration:none; color:var(--muted);
+  padding:.2rem .4rem; border-radius:8px;
+}
+.footer__menu a:hover{ color:white; background: rgba(255,255,255,.04) }
 
+/* ---- Forms (contact) ---- */
+.form{
+  display:grid; gap:12px;
+  background: color-mix(in oklab, var(--card) 86%, transparent);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+.input, textarea{
+  width:100%; background: rgba(255,255,255,.03); color: var(--text);
+  border:1px solid var(--border); border-radius:12px;
+  padding: 12px 14px; outline:none;
+}
+.input:focus, textarea:focus{ box-shadow: var(--focus); border-color: rgba(255,255,255,.22) }
+label{ color: var(--muted); font-weight:600; font-size: 14px }
 
-/* ======================================
-   9) Forms
-   ====================================== */
-.form{ display:grid; gap:1rem }
-.form-row{ display:grid; gap:.5rem }
-.form-row.inline{ grid-template-columns:1fr 1fr; gap:1rem }
+textarea{ min-height: 130px; resize: vertical }
 
-label{ font-weight:600; font-size:.95rem }
+/* ---- Utilities ---- */
+.muted{ color: var(--muted) }
+.center{ text-align:center }
+.stack-sm > * + *{ margin-top: .4rem }
+.stack > * + *{ margin-top: .8rem }
+.stack-lg > * + *{ margin-top: 1.2rem }
 
-input, textarea, select{
-  width:100%;
-  padding:.75rem .85rem;
-  border-radius:10px;
+hr{
+  border: none; height:1px; background: var(--border);
+  margin: 10px 0;
+}
+
+/* ---- Support page extras (cards with icons) ---- */
+.icon-card{
+  display:grid; grid-template-columns: 56px 1fr; gap: 12px; align-items:flex-start;
+  padding: 14px; border-radius: var(--radius);
+  background: color-mix(in oklab, var(--card) 88%, transparent);
+  border: 1px solid var(--border);
+}
+.icon-card__icon{
+  width:56px; height:56px; border-radius: 12px;
+  background: radial-gradient(circle at 30% 30%, rgba(106,224,255,.35), rgba(58,123,255,.2) 60%, rgba(255,255,255,.0) 62%);
+  display:grid; place-items:center;
+}
+.icon-card__title{ font-size: 18px; margin-bottom: 2px }
+
+/* ---- Testing page specifics ---- */
+.pricing{
+  display:grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+}
+.price-card{
+  padding: 14px; border-radius: var(--radius);
+  background: color-mix(in oklab, var(--card) 88%, transparent);
+  border: 1px solid var(--border);
+}
+.price-card h3{ font-size: 18px; margin-bottom: 6px }
+.price-row{ display:flex; align-items:center; justify-content:space-between; gap: 10px }
+.badge{
+  display:inline-flex; align-items:center; height: 24px; padding: 0 10px;
+  background: rgba(106,224,255,.12); color: #dff6ff;
+  border: 1px solid rgba(255,255,255,.18); border-radius: 999px;
+  font-size: 12px; font-weight: 700; letter-spacing:.3px;
+}
+
+/* ---- Contact page specifics ---- */
+.contact-card{
+  display:grid; gap: 10px; padding: 16px; border-radius: var(--radius);
+  background: color-mix(in oklab, var(--card) 88%, transparent);
+  border: 1px solid var(--border);
+}
+.contact-chip{
+  display:inline-flex; align-items:center; gap:.4rem;
+  padding:.35rem .6rem; border-radius:999px;
+  background: rgba(255,255,255,.06);
   border:1px solid var(--border);
-  background: var(--card);
-  color: var(--text);
-  font: inherit;
-}
-textarea{ min-height:140px; resize:vertical }
-
-input:focus-visible, textarea:focus-visible, select:focus-visible{
-  outline:none; box-shadow: var(--focus); border-color: transparent;
 }
 
-.help{ font-size:.9rem; color:var(--muted) }
-
-.status{
-  display:none; margin-top:.5rem; padding:.75rem .9rem;
-  border-radius:10px; font-weight:600;
+/* ---- Media cards (index) ---- */
+.media-card{
+  display:grid; grid-template-columns: 120px 1fr; gap: 12px; align-items:center;
+  padding: 12px; border-radius: var(--radius);
+  background: color-mix(in oklab, var(--card) 88%, transparent);
+  border: 1px solid var(--border);
 }
-.status.show{ display:block }
-.status.ok{ background:#eaf7ef; color:#136c3f; border:1px solid #bfe6cd }
-.status.err{ background:#fdecec; color:#8d1a1a; border:1px solid #f4c5c5 }
-
-.btn[disabled]{ opacity:.7; cursor:not-allowed }
-.hp{ position:absolute; left:-10000px; width:1px; height:1px; overflow:hidden }
-
-
-/* ======================================
-   10) Anchor Offsets (for sticky header)
-   ====================================== */
-#services, #courses, #it-services, #contact{
-  scroll-margin-top: var(--header-h) + var(--extra-gap);
-  padding: 0 0 30px 0;
+.media-card__img{
+  width: 100%; aspect-ratio: 16/10; object-fit: cover; border-radius: 10px;
+  border:1px solid var(--border);
 }
-#contact .section__title{
-  margin-top: 18px;
-  margin-bottom: 18px;
+.media-card__title{ font-size: 18px; margin-bottom: 4px }
+
+/* ---- Home hero tiles ---- */
+.tiles{
+  display:grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
 }
-form .help { justify-self: center; }
-form .btn  { width: 200px; justify-self: center; }
-.anchor-offset{ scroll-margin-top: var(--header-h) + var(--extra-gap); }
+.tile{
+  display:grid; gap: 8px; align-content:start;
+  padding: 14px; border-radius: var(--radius);
+  background: color-mix(in oklab, var(--card) 88%, transparent);
+  border: 1px solid var(--border);
+}
+.tile h3{ font-size: 18px; margin-bottom: 2px }
+.tile .btn{ justify-self: start }
 
-
-/* ======================================
-   11) Page-Specific: Bottom “solo” cards
-       (Training, Testing, Support)
-   ====================================== */
-#courses + .section .section__title,
-#services + .section .section__title,
-#it-services + .section .section__title{
-  text-align: center;
+/* ---- Tiny helpers for images ---- */
+.img-shadow{
+  box-shadow: var(--shadow);
+  border-radius: 12px;
+  border: 1px solid var(--border);
 }
 
-#courses + .section > .container > .card,
-#services + .section > .container > .card,
-#it-services + .section > .container > .card{
-  max-width: 520px;
-  margin-inline: auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
+/* ---- “Back to top / CTA pill” (optional) ---- */
+.fab{
+  position: fixed; bottom: 18px; right: 18px;
+  width: 52px; height: 52px; border-radius: 999px;
+  display:grid; place-items:center;
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.12));
+  border:1px solid rgba(255,255,255,.18);
+  color:white; text-decoration:none;
+  box-shadow: var(--shadow);
 }
 
-#courses + .section > .container > .card .list,
-#services + .section > .container > .card .list,
-#it-services + .section > .container > .card .list{
-  display: block;
-  align-self: center;
-  text-align: left;
-  margin: 0 0 1rem 0;
+/* ---- Images and logo sizing convenience ---- */
+.logo-grid{
+  display:grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+}
+.logo-grid img{
+  background: rgba(255,255,255,.03);
+  border:1px solid var(--border); border-radius: 12px;
+  width: 200px;
+  justify-self: center;
 }
 
-#courses + .section > .container > .card .btn,
-#services + .section > .container > .card .btn,
-#it-services + .section > .container > .card .btn{
-  align-self: center;
-  margin-top: .75rem;
-}
+/* Utility: apply to any anchor target if needed */
+.anchor-offset{ scroll-margin-top: var(--header-h); }
 
-/* keep course grid buttons pinned to bottom */
-#courses .grid .card{ display:flex; flex-direction:column; }
-#courses .grid .card .btn{ margin-top:auto; }
-
-
-/* ======================================
-   12) Desktop-Only Tweaks (≥901px)
-   ====================================== */
-@media (min-width:901px){
-
-  /* Hide hamburger; force menu visible */
-  .nav-toggle{ display:none !important; }
-  #primary-menu{ display:flex !important; }
-
-  /* Footer — desktop shows NAV only */
-  .footer__grid{ justify-content: center; }
-  .footer__grid > p{ display: none !important; }
-  .footer__grid > nav.footer__menu{ display: flex !important; }
-}
-
-
-/* ======================================
-   13) Mobile / Small Screen (≤900px)
-   ====================================== */
-@media (max-width:900px){
-
-  /* shorter anchor offset on mobile */
-  :root{ --header-h: 72px; }
-
-  /* Center hero text and layout */
-  .hero__inner{ grid-template-columns:1fr; text-align:center; justify-items:center }
+/* ---- Responsive ---- */
+@media (max-width: 900px){
+  :root{ --header-h: 72px; } /* slightly shorter header on mobile */
+  .hero__inner{ grid-template-columns:1fr; text-align:center }
   .hero__copy .hero__cta{ justify-content:center }
-  .hero__copy h1, .hero .lead{ margin-inline:auto }
-
-  /* Cards stack to single column */
   .grid{ grid-template-columns:1fr }
-
-  /* Mobile nav (hamburger + dropdown) */
-  .nav-toggle{
-    display:inline-flex;
-    background: transparent;
-    border: 0;
-    padding: .4rem;
-    border-radius: 10px;
-    color: var(--text);
-    cursor: pointer;
-  }
-  .nav-toggle:focus-visible{ outline:none; box-shadow: var(--focus); }
-
-  /* Dropdown panel (hidden by default) */
-  #primary-menu{
-    display: none;
-    position: absolute;
-    left: 0; right: 0; top: 100%;
-    background: var(--nav-bg);
-    border-bottom: 1px solid var(--border);
-    box-shadow: var(--shadow);
-    padding: .5rem .75rem 1rem;
-    flex-direction: column;
-    gap: .35rem;
-    z-index: 60;
-    animation: menuSlide .15s ease;
-  }
-  #primary-menu.is-open{ display: flex; }
-
-  /* Full-width tap targets for plain links; keep buttons centered */
-  #primary-menu a:not(.btn){
-    display: block;
-    color: var(--text);
-    padding: .7rem .8rem;
-    border-radius: 10px;
-  }
-  #primary-menu a:hover{
-    background: color-mix(in oklab, var(--card) 85%, transparent);
-    color: var(--text);
-  }
-  #primary-menu .btn{ width:100%; justify-content:center }
-  #primary-menu .sep{ display:none } /* hide “|” separators on mobile */
-
-  @keyframes menuSlide{
-    from{ transform: translateY(-6px); opacity: 0 }
-    to{ transform: translateY(0); opacity: 1 }
-  }
-
-  /* Footer — mobile shows COPYRIGHT only */
-  .site-footer{ padding: 16px 0 22px; }
-  .footer__grid{
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: .5rem;
-    justify-content: center;
-  }
-  .footer__grid > nav.footer__menu{ display: none !important; }
-  .footer__grid > p{ display: block !important; }
 }
 
+/* --- Websites page niceties (2025-10-23) --- */
+.muted { color: var(--muted); }
 
-/* ======================================
-   14) Page-Specific Layout: Contact page only
-   (safe sticky footer for the contact page content)
-   ====================================== */
-body:has(#contact){
-  min-height: 100svh;
-  display: grid;
-  grid-template-rows: auto 1fr auto;  /* header / content / footer */
+#packages .card h3 {
+  display: inline-block;
+  margin-right: .5rem;
 }
-body:has(#contact) .site-header{ grid-row: 1; }
-body:has(#contact) #contact{ grid-row: 2; }
-body:has(#contact) .site-footer{ grid-row: 3; }
 
+#packages .card ul.list {
+  margin-top: .4rem;
+}
 
-/* ======================================
-   15) Utilities
-   ====================================== */
-/* Add any project-wide helper classes here as you grow the site */
+#packages .card .btn {
+  margin-top: .5rem;
+}
+
+/* Light list ticks (keeps the minimal vibe) */
+.list li {
+  list-style: none;
+  position: relative;
+  padding-left: 1.1rem;
+}
+.list li::before{
+  content: "•";
+  position:absolute; left:.2rem; top:0;
+  color: color-mix(in oklab, var(--brand) 70%, var(--brand-2));
+}
+
+/* Keep nav pipes tidy on wrap */
+.menu { gap: .4rem; }
