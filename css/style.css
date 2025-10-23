@@ -232,3 +232,64 @@ form .btn {
   .hero__copy .hero__cta{ justify-content:center }
   .grid{ grid-template-columns:1fr }
 }
+/* --- Mobile nav toggle (adds to your current CSS) --- */
+.nav { min-height: 56px; } /* keeps toggle vertically centered */
+
+/* Hidden on desktop */
+.hamburger,
+.nav-toggle,
+.menu-toggle,
+[data-mobile-toggle]{
+  display: none;
+}
+
+/* Positioning context for absolute children */
+.site-header .nav{ position: relative; }
+
+/* Mobile behavior */
+@media (max-width: 900px){
+  /* Show & pin the toggle on mobile */
+  .hamburger,
+  .nav-toggle,
+  .menu-toggle,
+  [data-mobile-toggle]{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: color-mix(in oklab, var(--card) 80%, transparent);
+    cursor: pointer;
+    z-index: 5;
+    font-size: 20px; /* makes ☰ visible */
+    line-height: 1;
+    color: var(--text);
+  }
+
+  /* Hide the horizontal menu by default on mobile */
+  .menu{
+    display: none;
+  }
+
+  /* When opened via JS */
+  .menu.is-open{
+    display: flex;
+    flex-direction: column;
+    gap: .6rem;
+    position: absolute;
+    left: 0; right: 0;
+    top: calc(100% + 12px);
+    background: color-mix(in oklab, var(--surface) 94%, transparent);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px;
+    box-shadow: var(--shadow);
+  }
+}
+
