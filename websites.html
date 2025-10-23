@@ -3,11 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Testra - D&A Testing</title>
+  <title>Testra - Website Design</title>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css" />
   <link rel="icon" href="img/logoCircle.png" type="image/png" />
+  <meta name="description" content="Clean, mobile-friendly websites built locally. Transparent pricing, fast turnarounds, and ongoing maintenance.">
 </head>
 <body>
 
@@ -19,8 +20,8 @@
     </a>
     <nav class="menu">
       <a href="index.html">Home</a>|
-      <a href="testing.html" class="active">D&A Testing</a>|
-      <a href="training.html">Computer Training</a>|
+      <a href="testing.html">D&A Testing</a>|
+      <a href="websites.html" class="active">Website Design</a>|
       <a href="support.html">IT Support</a>
       <a href="contact.html" class="btn btn--sm" id="navContactBtn">Contact Us</a>
     </nav>
@@ -30,10 +31,11 @@
 <section class="hero">
   <div class="container hero__inner">
     <div class="hero__copy">
-      <h1>Certified Drug &amp; Alcohol Testing</h1>
-      <p class="lead">Discrete, DOT-compliant testing with fast turnarounds for individuals and employers.</p>
+      <h1>Custom Website Design</h1>
+      <p class="lead">Clean, mobile-friendly websites that fit your business—built locally, maintained reliably.</p>
       <div class="hero__cta">
-        <a href="#services" class="btn btn--dark btn--lg">View Services</a>
+        <a href="#packages" class="btn btn--dark btn--lg">View Packages</a>
+        <a href="contact.html" class="btn btn--ghost btn--lg">Request a Quote</a>
       </div>
     </div>
     <div class="hero__art" aria-hidden="true">
@@ -44,46 +46,52 @@
   <svg class="wave" viewBox="0 0 1440 110" preserveAspectRatio="none" aria-hidden="true">
     <path d="M0,48 C240,120 480,0 720,48 C960,96 1200,96 1440,48 L1440,120 L0,120 Z"></path>
   </svg>
-  <svg class="wave flipped" viewBox="0 0 1440 110" preserveAspectRatio="none">
+  <svg class="wave flipped" viewBox="0 0 1440 110" preserveAspectRatio="none" aria-hidden="true">
     <path d="M0,48 C240,120 480,0 720,48 C960,96 1200,96 1440,48 L1440,110 L0,110 Z"></path>
   </svg>
 </section>
 
-<section id="services" class="section">
+<section id="packages" class="section">
   <div class="container">
-    <h2 class="section__title">Services</h2>
+    <h2 class="section__title">Website Packages</h2>
     <div class="grid">
+      <!-- Starter -->
       <article class="card">
-        <h3>DOT &amp; Non-DOT Testing</h3>
+        <h3>Starter</h3>
+        <p class="muted">Best for new businesses or simple info sites.</p>
         <ul class="list">
-          <li>DOT-compliant protocols</li>
-          <li>Random, pre-employment, return-to-duty</li>
-          <li>Chain of custody documentation</li>
+          <li>1–3 pages</li>
+          <li>Mobile-responsive design</li>
+          <li>Basic SEO setup</li>
+          <li>Contact form</li>
         </ul>
+        <a href="contact.html" class="btn btn--block">Get Started</a>
       </article>
+
+      <!-- Professional -->
       <article class="card">
-        <h3>Alcohol Testing (BAT)</h3>
+        <h3>Professional</h3>
+        <p class="muted">For growing brands that need flexibility.</p>
         <ul class="list">
-          <li>Breath Alcohol Testing</li>
-          <li>Screening &amp; confirmation</li>
-          <li>Immediate results</li>
+          <li>Up to 6 pages</li>
+          <li>Custom layout & branding</li>
+          <li>Galleries, blog, or booking</li>
+          <li>Performance & SEO tuning</li>
         </ul>
+        <a href="contact.html" class="btn btn--block">Request a Quote</a>
       </article>
+
+      <!-- Business Plus -->
       <article class="card">
-        <h3>Drug Testing</h3>
+        <h3>Business Plus</h3>
+        <p class="muted">For larger sites or online stores.</p>
         <ul class="list">
-          <li>Urine &amp; Oral Fluid (POCT / Lab)</li>
-          <li>Post-incident &amp; reasonable cause</li>
-          <li>Lab confirmation when required</li>
+          <li>10+ pages or eCommerce</li>
+          <li>Product setup & payments</li>
+          <li>Hosting & maintenance plan</li>
+          <li>Priority updates</li>
         </ul>
-      </article>
-      <article class="card">
-        <h3>Mobile &amp; After-Hours</h3>
-        <ul class="list">
-          <li>On-site collections for teams</li>
-          <li>After-hours availability</li>
-          <li>Discreet, fast coordination</li>
-        </ul>
+        <a href="contact.html" class="btn btn--block">Book a Consult</a>
       </article>
     </div>
   </div>
@@ -91,14 +99,14 @@
 
 <section class="section">
   <div class="container">
-    <h2 class="section__title">What to Bring</h2>
+    <h2 class="section__title">Our Process</h2>
     <div class="card">
-      <ul class="list">
-        <li>Government-issued photo ID</li>
-        <li>Employer authorization (if applicable)</li>
-      </ul>
-      <p class="muted">Results and documentation are handled confidentially and released only to authorized parties.</p>
-      <a href="contact.html" class="btn">Book an Appointment</a>
+      <ol class="list">
+        <li>Discuss your goals and budget.</li>
+        <li>We design and build your site.</li>
+        <li>Launch and ongoing support included.</li>
+      </ol>
+      <a href="contact.html" class="btn">Request a Quote</a>
     </div>
   </div>
 </section>
@@ -108,8 +116,8 @@
     <p>© <span id="year"></span> Testra</p>
     <nav class="footer__menu">
       <a href="index.html">Home</a>|
-      <a href="testing.html" class="active">D&A Testing</a>|
-      <a href="training.html">Computer Training</a>|
+      <a href="testing.html">D&A Testing</a>|
+      <a href="websites.html">Website Design</a>|
       <a href="support.html">IT Support</a>|
       <a href="contact.html">Contact</a>
     </nav>
