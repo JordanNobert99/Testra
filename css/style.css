@@ -374,3 +374,48 @@ hr{
 
 /* Keep nav pipes tidy on wrap */
 .menu { gap: .4rem; }
+
+/* Mobile behavior */
+@media (max-width: 900px) {
+  /* Show & pin the hamburger to the right on mobile */
+  .hamburger,
+  .nav-toggle,
+  .menu-toggle,
+  [data-mobile-toggle] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,.04);
+    cursor: pointer;
+    z-index: 5;
+  }
+
+  /* Hide the horizontal menu by default on mobile */
+  .menu {
+    display: none;
+  }
+
+  /* When you add .is-open with JS, show the panel */
+  .menu.is-open {
+    display: flex;
+    flex-direction: column;
+    gap: .6rem;
+    position: absolute;
+    left: 0; right: 0;
+    top: calc(100% + 12px); /* slightly more breathing room */
+    background: color-mix(in oklab, var(--surface) 94%, transparent);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px;
+    box-shadow: var(--shadow);
+  }
+}
+
