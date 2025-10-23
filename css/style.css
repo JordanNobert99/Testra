@@ -295,7 +295,7 @@ form .btn {
 
 @media (min-width: 901px) {
   .menu a + a::before {
-    content: "•";
+    content: "|  ";
     color: var(--muted);
     opacity: 0.4;
     margin: 0 0.4rem;
