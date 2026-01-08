@@ -15,9 +15,6 @@ firestore-debug.*.log
 *.key
 *.pem
 
-# Firebase Config
-js/firebase-config.js
-
 # Node modules (if using npm/yarn)
 node_modules/
 npm-debug.log*
