@@ -1,0 +1,125 @@
+<div class="test-panel">
+    <div class="test-header">
+        <h2><i class="fas fa-flask"></i> Notification Testing Panel</h2>
+        <p>Create, test, and manage notifications for development and testing purposes.</p>
+    </div>
+
+    <div class="test-grid">
+        <!-- Create Notification Card -->
+        <div class="test-card">
+            <div class="test-card-header">
+                <h3><i class="fas fa-plus-circle"></i> Create Test Notification</h3>
+            </div>
+            <div class="test-card-body">
+                <form id="createNotificationForm">
+                    <div class="form-group">
+                        <label>User ID</label>
+                        <input type="text" id="testUserId" class="form-input" placeholder="Enter user ID or leave blank for self">
+                        <small>Leave blank to send to yourself</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Type</label>
+                        <select id="testType" class="form-input">
+                            <option value="info">Info</option>
+                            <option value="success">Success</option>
+                            <option value="warning">Warning</option>
+                            <option value="error">Error</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" id="testTitle" class="form-input" placeholder="Notification title" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Message</label>
+                        <textarea id="testMessage" class="form-input" rows="3" placeholder="Notification message" required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-paper-plane"></i> Send Notification
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Quick Test Actions -->
+        <div class="test-card">
+            <div class="test-card-header">
+                <h3><i class="fas fa-rocket"></i> Quick Tests</h3>
+            </div>
+            <div class="test-card-body">
+                <p>Send preset test notifications:</p>
+
+                <button onclick="sendQuickTest('info')" class="test-btn test-btn-info">
+                    <i class="fas fa-info-circle"></i> Send Info Test
+                </button>
+
+                <button onclick="sendQuickTest('success')" class="test-btn test-btn-success">
+                    <i class="fas fa-check-circle"></i> Send Success Test
+                </button>
+
+                <button onclick="sendQuickTest('warning')" class="test-btn test-btn-warning">
+                    <i class="fas fa-exclamation-triangle"></i> Send Warning Test
+                </button>
+
+                <button onclick="sendQuickTest('error')" class="test-btn test-btn-error">
+                    <i class="fas fa-exclamation-circle"></i> Send Error Test
+                </button>
+
+                <hr style="margin: 20px 0; border: none; border-top: 1px solid var(--color-border-light);">
+
+                <button onclick="sendBulkTest()" class="test-btn test-btn-bulk">
+                    <i class="fas fa-layer-group"></i> Send 5 Random Notifications
+                </button>
+            </div>
+        </div>
+
+        <!-- Database Management -->
+        <div class="test-card">
+            <div class="test-card-header">
+                <h3><i class="fas fa-database"></i> Database Management</h3>
+            </div>
+            <div class="test-card-body">
+                <div class="stat-box">
+                    <div class="stat-label">Total Notifications</div>
+                    <div class="stat-value" id="totalNotifications">-</div>
+                </div>
+
+                <div class="stat-box">
+                    <div class="stat-label">Unread Notifications</div>
+                    <div class="stat-value" id="unreadNotifications">-</div>
+                </div>
+
+                <button onclick="loadNotificationStats()" class="test-btn">
+                    <i class="fas fa-sync"></i> Refresh Stats
+                </button>
+
+                <button onclick="deleteAllMyNotifications()" class="test-btn test-btn-danger">
+                    <i class="fas fa-trash"></i> Delete All My Notifications
+                </button>
+
+                <button onclick="createFirestoreIndex()" class="test-btn">
+                    <i class="fas fa-list"></i> Show Index Setup
+                </button>
+            </div>
+        </div>
+
+        <!-- All Users List -->
+        <div class="test-card">
+            <div class="test-card-header">
+                <h3><i class="fas fa-users"></i> All Users</h3>
+            </div>
+            <div class="test-card-body">
+                <p>Send notifications to any user:</p>
+                <div id="usersList">
+                    <button onclick="loadAllUsers()" class="test-btn">
+                        <i class="fas fa-user-friends"></i> Load All Users
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

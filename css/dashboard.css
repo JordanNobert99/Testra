@@ -28,7 +28,7 @@ body {
     flex-direction: column;
     position: fixed;
     height: 100vh;
-    overflow-y: hidden;
+    overflow-y: auto;
     transition: transform var(--transition-base);
     z-index: var(--z-fixed);
 }
@@ -408,7 +408,284 @@ body {
     text-decoration: underline;
 }
 
-/* Responsive */
+/* Testing Panel Styles */
+.test-panel {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.test-header {
+    margin-bottom: var(--space-3xl);
+    text-align: center;
+}
+
+.test-header h2 {
+    font-size: var(--font-3xl);
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-sm);
+}
+
+.test-header h2 i {
+    color: var(--color-primary);
+    margin-right: var(--space-md);
+}
+
+.test-header p {
+    color: var(--color-text-secondary);
+    font-size: var(--font-lg);
+}
+
+.test-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: var(--space-xl);
+}
+
+.test-card {
+    background: var(--color-bg-secondary);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+}
+
+.test-card-header {
+    background: var(--gradient-sidebar);
+    color: var(--color-text-white);
+    padding: var(--space-lg) var(--space-xl);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.test-card-header h3 {
+    font-size: var(--font-lg);
+    font-weight: var(--font-semibold);
+    margin: 0;
+}
+
+.test-card-header i {
+    margin-right: var(--space-sm);
+}
+
+.test-card-body {
+    padding: var(--space-xl);
+}
+
+.form-group {
+    margin-bottom: var(--space-lg);
+}
+
+.form-group label {
+    display: block;
+    font-size: var(--font-sm);
+    font-weight: var(--font-semibold);
+    color: var(--color-text-primary);
+    margin-bottom: var(--space-xs);
+}
+
+.form-group small {
+    display: block;
+    font-size: var(--font-xs);
+    color: var(--color-text-secondary);
+    margin-top: var(--space-xs);
+}
+
+.form-input {
+    width: 100%;
+    padding: var(--space-md);
+    border: 1px solid var(--color-border-medium);
+    border-radius: var(--radius-md);
+    font-size: var(--font-base);
+    font-family: var(--font-family);
+    background: var(--color-bg-primary);
+    color: var(--color-text-primary);
+    transition: border-color var(--transition-base);
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+.test-btn {
+    width: 100%;
+    padding: var(--space-md) var(--space-lg);
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: var(--font-base);
+    font-weight: var(--font-semibold);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    margin-bottom: var(--space-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+}
+
+.test-btn i {
+    font-size: var(--font-lg);
+}
+
+.test-btn-info {
+    background: rgba(26, 93, 138, 0.1);
+    color: var(--color-primary);
+}
+
+.test-btn-info:hover {
+    background: rgba(26, 93, 138, 0.2);
+}
+
+.test-btn-success {
+    background: rgba(34, 197, 94, 0.1);
+    color: var(--color-success);
+}
+
+.test-btn-success:hover {
+    background: rgba(34, 197, 94, 0.2);
+}
+
+.test-btn-warning {
+    background: rgba(245, 158, 11, 0.1);
+    color: var(--color-warning);
+}
+
+.test-btn-warning:hover {
+    background: rgba(245, 158, 11, 0.2);
+}
+
+.test-btn-error {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--color-error);
+}
+
+.test-btn-error:hover {
+    background: rgba(239, 68, 68, 0.2);
+}
+
+.test-btn-bulk {
+    background: var(--gradient-sidebar);
+    color: var(--color-text-white);
+}
+
+.test-btn-bulk:hover {
+    opacity: 0.9;
+}
+
+.test-btn-danger {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--color-error);
+    border: 1px solid var(--color-error);
+}
+
+.test-btn-danger:hover {
+    background: var(--color-error);
+    color: var(--color-text-white);
+}
+
+.btn-primary {
+    width: 100%;
+    padding: var(--space-md) var(--space-lg);
+    background: var(--gradient-sidebar);
+    color: var(--color-text-white);
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: var(--font-base);
+    font-weight: var(--font-semibold);
+    cursor: pointer;
+    transition: opacity var(--transition-base);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+}
+
+.btn-primary:hover {
+    opacity: 0.9;
+}
+
+.stat-box {
+    background: var(--color-bg-primary);
+    padding: var(--space-lg);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-md);
+    text-align: center;
+}
+
+.stat-label {
+    font-size: var(--font-sm);
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-xs);
+}
+
+.stat-value {
+    font-size: var(--font-3xl);
+    font-weight: var(--font-bold);
+    color: var(--color-primary);
+}
+
+.users-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.user-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-md);
+    background: var(--color-bg-primary);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-sm);
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.user-details strong {
+    color: var(--color-text-primary);
+}
+
+.user-details small {
+    color: var(--color-text-secondary);
+    font-size: var(--font-xs);
+}
+
+.role-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+    font-size: var(--font-xs);
+    font-weight: var(--font-semibold);
+    text-transform: uppercase;
+}
+
+.role-admin {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--color-error);
+}
+
+.role-user {
+    background: rgba(26, 93, 138, 0.1);
+    color: var(--color-primary);
+}
+
+.btn-small {
+    padding: var(--space-xs) var(--space-md);
+    background: var(--color-primary);
+    color: var(--color-text-white);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: var(--font-sm);
+    cursor: pointer;
+    transition: opacity var(--transition-base);
+}
+
+.btn-small:hover {
+    opacity: 0.8;
+}
+
 @media (max-width: 768px) {
     .sidebar {
         transform: translateX(-100%);
@@ -444,5 +721,11 @@ body {
 
     .content-wrapper {
         padding: var(--space-xl);
+    }
+}
+
+@media (max-width: 768px) {
+    .test-grid {
+        grid-template-columns: 1fr;
     }
 }

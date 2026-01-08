@@ -1,34 +1,10 @@
-import { auth, db } from './firebase-config.js';
+﻿import { auth, db } from './firebase-config.js';
 import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { doc, getDoc, collection, query, where, orderBy, limit, getDocs, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { doc, getDoc, collection, query, where, orderBy, limit, onSnapshot, updateDoc, writeBatch, addDoc, getDocs, deleteDoc, Timestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// Sample notifications data (will be replaced with Firestore later)
-let notifications = [
-    {
-        id: 1,
-        type: 'info',
-        title: 'New Appointment Request',
-        message: 'Drug test appointment from SureHire',
-        time: '5 minutes ago',
-        read: false
-    },
-    {
-        id: 2,
-        type: 'warning',
-        title: 'Low Inventory Alert',
-        message: '10-panel test kits below threshold',
-        time: '1 hour ago',
-        read: false
-    },
-    {
-        id: 3,
-        type: 'success',
-        title: 'Payment Received',
-        message: 'Invoice #1234 paid successfully',
-        time: '2 hours ago',
-        read: false
-    }
-];
+// Notifications array (populated from Firestore)
+let notifications = [];
+let currentUserId = null;
 
 // Wait for DOM to load
 document.addEventListener('DOMContentLoaded', () => {
@@ -40,6 +16,9 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = 'login.html';
             return;
         }
+        
+        currentUserId = user.uid;
+        console.log('✅ Current user ID:', currentUserId);
         
         try {
             const userRef = doc(db, 'users', user.uid);
@@ -58,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.querySelector('.loading').style.display = 'none';
                 
                 // Initialize notifications
-                initializeNotifications();
+                initializeNotifications(user.uid);
                 
                 console.log('Admin dashboard ready for:', userData.displayName);
             } else {
@@ -120,7 +99,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 'invoices': 'Invoices',
                 'email': 'Email',
                 'reports': 'Reports',
-                'settings': 'Settings'
+                'settings': 'Settings',
+                'test': 'Testing Panel'
             };
             
             document.getElementById('pageTitle').textContent = titles[page] || 'Dashboard';
@@ -128,22 +108,28 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
     
-    function loadPage(page) {
+    async function loadPage(page) {
         const contentArea = document.getElementById('contentArea');
-        contentArea.innerHTML = `
-            <div class="page-placeholder">
-                <i class="fas fa-tools"></i>
-                <h2>${page.charAt(0).toUpperCase() + page.slice(1)} Page</h2>
-                <p>This page is under construction.</p>
-            </div>
-        `;
+        
+        if (page === 'test') {
+            await loadTestingPanel();
+        } else {
+            contentArea.innerHTML = `
+                <div class="page-placeholder">
+                    <i class="fas fa-tools"></i>
+                    <h2>${page.charAt(0).toUpperCase() + page.slice(1)} Page</h2>
+                    <p>This page is under construction.</p>
+                </div>
+            `;
+        }
     }
 });
 
 // Initialize notifications system
-function initializeNotifications() {
+function initializeNotifications(userId) {
+    console.log('🔔 Initializing notifications for user:', userId);
+    
     const notificationsBtn = document.getElementById('notificationsBtn');
-    const badge = notificationsBtn.querySelector('.badge');
     
     // Create notifications dropdown
     createNotificationsDropdown();
@@ -151,11 +137,15 @@ function initializeNotifications() {
     // Update badge count
     updateNotificationBadge();
     
+    // Listen for real-time notifications from Firestore
+    listenForNotifications(userId);
+    
     // Toggle dropdown on click
     notificationsBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         const dropdown = document.querySelector('.notifications-dropdown');
         dropdown.classList.toggle('show');
+        console.log('Dropdown toggled, notifications count:', notifications.length);
     });
     
     // Close dropdown when clicking outside
@@ -165,6 +155,85 @@ function initializeNotifications() {
             dropdown.classList.remove('show');
         }
     });
+}
+
+// Listen for real-time notifications from Firestore
+function listenForNotifications(userId) {
+    console.log('📡 Setting up notification listener for:', userId);
+    
+    const notificationsRef = collection(db, 'notifications');
+    
+    // Limit to last 50 notifications
+    const q = query(
+        notificationsRef,
+        where('userId', '==', userId),
+        orderBy('createdAt', 'desc'),
+        limit(50)
+    );
+    
+    onSnapshot(q, 
+        (snapshot) => {
+            console.log('📩 Notification snapshot received:', snapshot.size, 'documents');
+            
+            notifications = snapshot.docs.map(doc => {
+                const data = doc.data();
+                console.log('  - Notification:', doc.id, data.title);
+                return {
+                    id: doc.id,
+                    type: data.type || 'info',
+                    title: data.title,
+                    message: data.message,
+                    time: formatTimestamp(data.createdAt),
+                    read: data.read || false
+                };
+            });
+            
+            console.log('✅ Total notifications loaded:', notifications.length);
+            console.log('🔴 Unread count:', notifications.filter(n => !n.read).length);
+            
+            // Update UI
+            createNotificationsDropdown();
+            updateNotificationBadge();
+        }, 
+        (error) => {
+            console.error('❌ Error listening to notifications:', error);
+            
+            // Check if it's an index error
+            if (error.message.includes('index')) {
+                console.warn('⚠️ Index not ready yet. Please wait or create the index.');
+                console.warn('📋 Index needed: Collection: notifications, Fields: userId (Ascending), createdAt (Descending)');
+            }
+            
+            // Show empty state on error
+            notifications = [];
+            createNotificationsDropdown();
+            updateNotificationBadge();
+        }
+    );
+}
+
+// Format Firestore timestamp to relative time
+function formatTimestamp(timestamp) {
+    if (!timestamp) return 'Just now';
+    
+    try {
+        const now = new Date();
+        const notificationDate = timestamp.toDate();
+        const diffMs = now - notificationDate;
+        const diffMins = Math.floor(diffMs / 60000);
+        const diffHours = Math.floor(diffMs / 3600000);
+        const diffDays = Math.floor(diffMs / 86400000);
+        
+        if (diffMins < 1) return 'Just now';
+        if (diffMins < 60) return `${diffMins} minute${diffMins > 1 ? 's' : ''} ago`;
+        if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+        if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+        
+        return notificationDate.toLocaleDateString();
+    } catch (error) {
+        console.error('Error formatting timestamp:', error);
+        return 'Recently';
+    }
 }
 
 // Create notifications dropdown HTML
@@ -193,12 +262,13 @@ function createNotificationsDropdown() {
     `;
     
     document.querySelector('.topbar').appendChild(dropdown);
+    console.log('🎨 Dropdown UI updated with', notifications.length, 'notifications');
 }
 
 // Render notification items
 function renderNotifications() {
     return notifications.map(notification => `
-        <div class="notification-item ${!notification.read ? 'unread' : ''}" onclick="handleNotificationClick(${notification.id})">
+        <div class="notification-item ${!notification.read ? 'unread' : ''}" onclick="handleNotificationClick('${notification.id}')">
             <div class="notification-icon ${notification.type}">
                 <i class="fas fa-${getIconForType(notification.type)}"></i>
             </div>
@@ -231,16 +301,29 @@ function updateNotificationBadge() {
     if (badge) {
         badge.textContent = unreadCount;
         badge.style.display = unreadCount > 0 ? 'block' : 'none';
+        console.log('🔢 Badge updated:', unreadCount);
     }
 }
 
 // Handle notification click
-window.handleNotificationClick = function(notificationId) {
+window.handleNotificationClick = async function(notificationId) {
     const notification = notifications.find(n => n.id === notificationId);
     if (notification && !notification.read) {
-        notification.read = true;
-        createNotificationsDropdown();
-        updateNotificationBadge();
+        // Mark as read in Firestore
+        try {
+            const notificationRef = doc(db, 'notifications', notificationId);
+            await updateDoc(notificationRef, {
+                read: true,
+                readAt: Timestamp.now()
+            });
+            console.log('✅ Marked notification as read:', notificationId);
+        } catch (error) {
+            console.error('Error marking notification as read:', error);
+            // Update locally on error
+            notification.read = true;
+            createNotificationsDropdown();
+            updateNotificationBadge();
+        }
     }
     
     // Navigate based on notification type
@@ -249,11 +332,33 @@ window.handleNotificationClick = function(notificationId) {
 };
 
 // Mark all notifications as read
-window.markAllAsRead = function(event) {
+window.markAllAsRead = async function(event) {
     event.preventDefault();
-    notifications.forEach(n => n.read = true);
-    createNotificationsDropdown();
-    updateNotificationBadge();
+    
+    const unreadNotifications = notifications.filter(n => !n.read);
+    
+    if (unreadNotifications.length === 0) return;
+    
+    try {
+        const batch = writeBatch(db);
+        
+        unreadNotifications.forEach(notification => {
+            const notificationRef = doc(db, 'notifications', notification.id);
+            batch.update(notificationRef, {
+                read: true,
+                readAt: Timestamp.now()
+            });
+        });
+        
+        await batch.commit();
+        console.log('✅ All notifications marked as read');
+    } catch (error) {
+        console.error('Error marking all as read:', error);
+        // Update locally on error
+        notifications.forEach(n => n.read = true);
+        createNotificationsDropdown();
+        updateNotificationBadge();
+    }
 };
 
 // View all notifications
@@ -263,3 +368,319 @@ window.viewAllNotifications = function(event) {
     // Navigate to notifications page
     console.log('View all notifications');
 };
+
+// ========================================
+// TESTING PANEL FUNCTIONALITY
+// ========================================
+
+async function loadTestingPanel() {
+    const contentArea = document.getElementById('contentArea');
+    
+    try {
+        // Fetch the HTML template
+        const response = await fetch('pages/testing-panel.html');
+        const html = await response.text();
+        
+        contentArea.innerHTML = html;
+        
+        // Attach form handler after HTML is loaded
+        const form = document.getElementById('createNotificationForm');
+        if (form) {
+            form.addEventListener('submit', handleCreateNotification);
+        }
+        
+        // Load initial stats
+        loadNotificationStats();
+        
+        console.log('Testing panel loaded');
+    } catch (error) {
+        console.error('Error loading testing panel:', error);
+        contentArea.innerHTML = `
+            <div class="page-placeholder">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h2>Error Loading Testing Panel</h2>
+                <p>Could not load pages/testing-panel.html</p>
+            </div>
+        `;
+    }
+}
+
+// Handle create notification form submission
+async function handleCreateNotification(e) {
+    e.preventDefault();
+    
+    const userId = document.getElementById('testUserId').value.trim() || currentUserId;
+    const type = document.getElementById('testType').value;
+    const title = document.getElementById('testTitle').value;
+    const message = document.getElementById('testMessage').value;
+    
+    console.log('📤 Creating notification for user:', userId);
+    
+    try {
+        const docRef = await addDoc(collection(db, 'notifications'), {
+            userId: userId,
+            type: type,
+            title: title,
+            message: message,
+            read: false,
+            createdAt: Timestamp.now()
+        });
+        
+        console.log('✅ Notification created with ID:', docRef.id);
+        alert('✅ Notification created successfully!');
+        
+        // Reset form
+        document.getElementById('testTitle').value = '';
+        document.getElementById('testMessage').value = '';
+        
+        // Refresh stats
+        loadNotificationStats();
+    } catch (error) {
+        console.error('❌ Error creating notification:', error);
+        alert('❌ Error creating notification: ' + error.message);
+    }
+}
+
+// Send quick test notification
+window.sendQuickTest = async function(type) {
+    const messages = {
+        info: {
+            title: 'Information Update',
+            message: 'This is a test info notification from the testing panel'
+        },
+        success: {
+            title: 'Operation Successful',
+            message: 'Test success notification - everything is working correctly'
+        },
+        warning: {
+            title: 'Warning Alert',
+            message: 'Test warning notification - please review this carefully'
+        },
+        error: {
+            title: 'Error Detected',
+            message: 'Test error notification - this simulates an error condition'
+        }
+    };
+    
+    console.log(`📤 Sending ${type} test notification...`);
+    
+    try {
+        const docRef = await addDoc(collection(db, 'notifications'), {
+            userId: currentUserId,
+            type: type,
+            title: messages[type].title,
+            message: messages[type].message,
+            read: false,
+            createdAt: Timestamp.now()
+        });
+        
+        console.log(`✅ ${type} test notification created:`, docRef.id);
+        loadNotificationStats();
+    } catch (error) {
+        console.error('❌ Error sending test notification:', error);
+        alert('❌ Error: ' + error.message);
+    }
+};
+
+// Send bulk test notifications
+window.sendBulkTest = async function() {
+    const testNotifications = [
+        { type: 'info', title: 'New Appointment', message: 'Drug test scheduled for tomorrow at 10 AM' },
+        { type: 'success', title: 'Payment Received', message: 'Invoice #2024-001 has been paid' },
+        { type: 'warning', title: 'Low Inventory', message: '10-panel drug tests running low' },
+        { type: 'info', title: 'Quote Request', message: 'New website design quote request received' },
+        { type: 'success', title: 'Project Complete', message: 'Website deployment completed successfully' }
+    ];
+    
+    console.log('📤 Sending 5 bulk test notifications...');
+    
+    try {
+        for (const notif of testNotifications) {
+            await addDoc(collection(db, 'notifications'), {
+                userId: currentUserId,
+                type: notif.type,
+                title: notif.title,
+                message: notif.message,
+                read: false,
+                createdAt: Timestamp.now()
+            });
+        }
+        
+        console.log('✅ 5 test notifications created!');
+        alert('✅ 5 test notifications created!');
+        loadNotificationStats();
+    } catch (error) {
+        console.error('❌ Error sending bulk notifications:', error);
+        alert('❌ Error: ' + error.message);
+    }
+};
+
+// Load notification statistics
+window.loadNotificationStats = async function() {
+    try {
+        const q = query(
+            collection(db, 'notifications'),
+            where('userId', '==', currentUserId)
+        );
+        
+        const snapshot = await getDocs(q);
+        const total = snapshot.size;
+        const unread = snapshot.docs.filter(doc => !doc.data().read).length;
+        
+        const totalEl = document.getElementById('totalNotifications');
+        const unreadEl = document.getElementById('unreadNotifications');
+        
+        if (totalEl) totalEl.textContent = total;
+        if (unreadEl) unreadEl.textContent = unread;
+        
+        console.log('📊 Stats updated - Total:', total, 'Unread:', unread);
+    } catch (error) {
+        console.error('Error loading stats:', error);
+    }
+};
+
+// Delete all user's notifications
+window.deleteAllMyNotifications = async function() {
+    if (!confirm('Are you sure you want to delete ALL your notifications? This cannot be undone.')) {
+        return;
+    }
+    
+    try {
+        const q = query(
+            collection(db, 'notifications'),
+            where('userId', '==', currentUserId)
+        );
+        
+        const snapshot = await getDocs(q);
+        const batch = writeBatch(db);
+        
+        snapshot.docs.forEach(doc => {
+            batch.delete(doc.ref);
+        });
+        
+        await batch.commit();
+        
+        console.log(`✅ Deleted ${snapshot.size} notifications`);
+        alert(`✅ Deleted ${snapshot.size} notifications`);
+        loadNotificationStats();
+    } catch (error) {
+        console.error('Error deleting notifications:', error);
+        alert('❌ Error: ' + error.message);
+    }
+};
+
+// Show Firestore index setup instructions
+window.createFirestoreIndex = function() {
+    alert(`📋 Firestore Index Setup
+
+If you get an error about missing indexes, follow these steps:
+
+1. Go to Firebase Console → Firestore Database → Indexes
+2. Click "Create Index"
+3. Collection ID: notifications
+4. Fields to index:
+   - userId (Ascending)
+   - createdAt (Descending)
+5. Click "Create"
+
+Or click the link in the browser console when you get the error - Firebase will auto-generate the index for you!`);
+};
+
+// Load all users for testing
+window.loadAllUsers = async function() {
+    try {
+        const usersSnapshot = await getDocs(collection(db, 'users'));
+        const usersList = document.getElementById('usersList');
+        
+        if (!usersList) return;
+        
+        let html = '<div class="users-list">';
+        
+        usersSnapshot.docs.forEach(doc => {
+            const userData = doc.data();
+            html += `
+                <div class="user-item">
+                    <div class="user-details">
+                        <strong>${userData.displayName || 'Unknown'}</strong>
+                        <small>${userData.email}</small>
+                        <span class="role-badge role-${userData.role}">${userData.role}</span>
+                    </div>
+                    <button onclick="sendToUser('${doc.id}', '${userData.displayName}')" class="btn-small">
+                        <i class="fas fa-bell"></i> Send
+                    </button>
+                </div>
+            `;
+        });
+        
+        html += '</div>';
+        usersList.innerHTML = html;
+    } catch (error) {
+        console.error('Error loading users:', error);
+        alert('❌ Error loading users: ' + error.message);
+    }
+};
+
+// Send notification to specific user
+window.sendToUser = async function(userId, userName) {
+    const title = prompt(`Enter notification title for ${userName}:`);
+    if (!title) return;
+    
+    const message = prompt('Enter notification message:');
+    if (!message) return;
+    
+    try {
+        await addDoc(collection(db, 'notifications'), {
+            userId: userId,
+            type: 'info',
+            title: title,
+            message: message,
+            read: false,
+            createdAt: Timestamp.now()
+        });
+        
+        alert(`✅ Notification sent to ${userName}!`);
+    } catch (error) {
+        console.error('Error sending notification:', error);
+        alert('❌ Error: ' + error.message);
+    }
+};
+
+// ========================================
+// AUTO-CLEANUP: Delete old notifications
+// ========================================
+
+// Clean up old read notifications (older than 30 days)
+async function cleanupOldNotifications() {
+    try {
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+        
+        const q = query(
+            collection(db, 'notifications'),
+            where('userId', '==', currentUserId),
+            where('read', '==', true),
+            where('createdAt', '<', Timestamp.fromDate(thirtyDaysAgo))
+        );
+        
+        const snapshot = await getDocs(q);
+        
+        if (snapshot.empty) {
+            console.log('No old notifications to clean up');
+            return;
+        }
+        
+        const batch = writeBatch(db);
+        snapshot.docs.forEach(doc => {
+            batch.delete(doc.ref);
+        });
+        
+        await batch.commit();
+        console.log(`🧹 Cleaned up ${snapshot.size} old notifications`);
+    } catch (error) {
+        console.error('Error cleaning up notifications:', error);
+    }
+}
+
+// Run cleanup on dashboard load (optional - run once per day in production)
+// Uncomment the line below to enable auto-cleanup
+// setTimeout(cleanupOldNotifications, 5000);
