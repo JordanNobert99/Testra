@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>My Dashboard - Testra</title>
+    <meta name="robots" content="noindex, nofollow">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/dashboard.css">
+
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Testra</h2>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-page="home">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
+                <a href="#" class="nav-item" data-page="services">
+                    <i class="fas fa-concierge-bell"></i>
+                    <span>Services</span>
+                </a>
+                <a href="#" class="nav-item" data-page="request-quote">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    <span>Request Quote</span>
+                </a>
+                <a href="#" class="nav-item" data-page="my-quotes">
+                    <i class="fas fa-list-alt"></i>
+                    <span>My Quotes</span>
+                </a>
+                <a href="#" class="nav-item" data-page="my-projects">
+                    <i class="fas fa-folder-open"></i>
+                    <span>My Projects</span>
+                </a>
+                <a href="#" class="nav-item" data-page="messages">
+                    <i class="fas fa-comments"></i>
+                    <span>Messages</span>
+                </a>
+                <a href="#" class="nav-item" data-page="account">
+                    <i class="fas fa-user-circle"></i>
+                    <span>My Account</span>
+                </a>
+                <a href="#" class="nav-item" data-page="support">
+                    <i class="fas fa-life-ring"></i>
+                    <span>Support</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="#" class="nav-item" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="menu-toggle" id="menuToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1 id="pageTitle">Welcome Back</h1>
+                </div>
+
+                <div class="topbar-right">
+                    <button class="icon-btn" id="notificationsBtn">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge">1</span>
+                    </button>
+
+                    <div class="user-profile">
+                        <div class="user-info">
+                            <span id="userName" class="user-name">Loading...</span>
+                            <span class="user-role">Client</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Area (pages will load here) -->
+            <div class="content-wrapper" id="contentArea">
+                <!-- Dynamic content loads here -->
+                <div class="loading">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Loading...</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module" src="js/firebase-config.js"></script>
+    <script type="module" src="js/user-dashboard.js"></script>
+</body>
+</html>
