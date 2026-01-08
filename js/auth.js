@@ -385,9 +385,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Check if user is already logged in and redirect to appropriate dashboard
+    // Check if user is already logged in - ONLY redirect if on login page
     auth.onAuthStateChanged(async (user) => {
-        if (user) {
+        // Only auto-redirect if we're on the login page
+        const isLoginPage = window.location.pathname.includes('login.html');
+        
+        if (user && isLoginPage) {
             console.log('User already logged in, checking role...');
             await redirectToDashboard(user.uid);
         }

@@ -2,17 +2,17 @@
   publish = "."
   command = ""
 
-# Serve login.html as the index/home page
+# Serve index.html as the home page
 [[redirects]]
   from = "/"
-  to = "/login.html"
+  to = "/index.html"
   status = 200
   force = true
 
-# Handle 404s by redirecting to login
+# Handle 404s by redirecting to home
 [[redirects]]
   from = "/*"
-  to = "/login.html"
+  to = "/index.html"
   status = 404
 
 # Security headers

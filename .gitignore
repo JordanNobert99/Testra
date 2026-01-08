@@ -38,10 +38,10 @@ logs/
 Thumbs.db
 
 # Build & Distribution
-dist/
-build/
 *.zip
 *.tar.gz
+backups/
+archives/
 
 # Temporary Files
 tmp/
