@@ -1,18 +1,9 @@
-import { auth, db } from './firebase-config.js';
+﻿import { auth, db } from './firebase-config.js';
 import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { doc, getDoc, collection, query, where, orderBy, onSnapshot, updateDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { doc, getDoc, collection, query, where, orderBy, limit, onSnapshot, updateDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 // Sample notifications data (will be replaced with Firestore)
-let notifications = [
-    {
-        id: 1,
-        type: 'success',
-        title: 'Quote Approved',
-        message: 'Your website design quote has been approved',
-        time: '2 hours ago',
-        read: false
-    }
-];
+let notifications = [];
 
 // Wait for DOM to load
 document.addEventListener('DOMContentLoaded', () => {
@@ -166,14 +157,21 @@ function initializeNotifications(userId) {
 
 // Listen for real-time notifications from Firestore
 function listenForNotifications(userId) {
+    console.log('📡 Setting up notification listener for:', userId);
+    
     const notificationsRef = collection(db, 'notifications');
+
+    // Limit to last 99 notifications
     const q = query(
         notificationsRef,
         where('userId', '==', userId),
-        orderBy('createdAt', 'desc')
+        orderBy('createdAt', 'desc'),
+        limit(250)
     );
     
     onSnapshot(q, (snapshot) => {
+        console.log('📩 Notification snapshot received:', snapshot.size, 'documents');
+        
         notifications = snapshot.docs.map(doc => {
             const data = doc.data();
             return {
@@ -186,14 +184,25 @@ function listenForNotifications(userId) {
             };
         });
         
+        console.log('✅ Total notifications loaded:', notifications.length);
+        console.log('🔴 Unread count:', notifications.filter(n => !n.read).length);
+        
         // Update UI
         createNotificationsDropdown();
         updateNotificationBadge();
-        
-        console.log('Notifications updated:', notifications.length);
     }, (error) => {
-        console.error('Error listening to notifications:', error);
-        // Fall back to sample data on error
+        console.error('❌ Error listening to notifications:', error);
+        
+        // Check if it's an index error
+        if (error.message.includes('index')) {
+            console.warn('⚠️ Index not ready yet. Please wait or create the index.');
+            console.warn('📋 Index needed: Collection: notifications, Fields: userId (Ascending), createdAt (Descending)');
+        }
+        
+        // Show empty state on error
+        notifications = [];
+        createNotificationsDropdown();
+        updateNotificationBadge();
     });
 }
 
@@ -201,19 +210,24 @@ function listenForNotifications(userId) {
 function formatTimestamp(timestamp) {
     if (!timestamp) return 'Just now';
     
-    const now = new Date();
-    const notificationDate = timestamp.toDate();
-    const diffMs = now - notificationDate;
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMs / 3600000);
-    const diffDays = Math.floor(diffMs / 86400000);
-    
-    if (diffMins < 1) return 'Just now';
-    if (diffMins < 60) return `${diffMins} minute${diffMins > 1 ? 's' : ''} ago`;
-    if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
-    if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
-    
-    return notificationDate.toLocaleDateString();
+    try {
+        const now = new Date();
+        const notificationDate = timestamp.toDate();
+        const diffMs = now - notificationDate;
+        const diffMins = Math.floor(diffMs / 60000);
+        const diffHours = Math.floor(diffMs / 3600000);
+        const diffDays = Math.floor(diffMs / 86400000);
+        
+        if (diffMins < 1) return 'Just now';
+        if (diffMins < 60) return `${diffMins} minute${diffMins > 1 ? 's' : ''} ago`;
+        if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+        if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+        
+        return notificationDate.toLocaleDateString();
+    } catch (error) {
+        console.error('Error formatting timestamp:', error);
+        return 'Recently';
+    }
 }
 
 // Create notifications dropdown HTML
@@ -242,6 +256,7 @@ function createNotificationsDropdown() {
     `;
     
     document.querySelector('.topbar').appendChild(dropdown);
+    console.log('🎨 Dropdown UI updated with', notifications.length, 'notifications');
 }
 
 // Render notification items
@@ -278,8 +293,10 @@ function updateNotificationBadge() {
     const unreadCount = notifications.filter(n => !n.read).length;
     
     if (badge) {
-        badge.textContent = unreadCount;
+        // Display "99+" if count exceeds 99, otherwise show actual count
+        badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
         badge.style.display = unreadCount > 0 ? 'block' : 'none';
+        console.log('🔢 Badge updated:', unreadCount, '(displaying:', badge.textContent, ')');
     }
 }
 
@@ -294,6 +311,7 @@ window.handleNotificationClick = async function(notificationId) {
                 read: true,
                 readAt: new Date()
             });
+            console.log('✅ Marked notification as read:', notificationId);
         } catch (error) {
             console.error('Error marking notification as read:', error);
             // Update locally on error
@@ -328,7 +346,7 @@ window.markAllAsRead = async function(event) {
         });
         
         await batch.commit();
-        console.log('All notifications marked as read');
+        console.log('✅ All notifications marked as read');
     } catch (error) {
         console.error('Error marking all as read:', error);
         // Update locally on error

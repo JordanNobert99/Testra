@@ -162,13 +162,13 @@ function listenForNotifications(userId) {
     console.log('📡 Setting up notification listener for:', userId);
     
     const notificationsRef = collection(db, 'notifications');
-    
-    // Limit to last 50 notifications
+
+    // Limit to last 99 notifications
     const q = query(
         notificationsRef,
         where('userId', '==', userId),
         orderBy('createdAt', 'desc'),
-        limit(50)
+        limit(250)
     );
     
     onSnapshot(q, 
@@ -299,9 +299,10 @@ function updateNotificationBadge() {
     const unreadCount = notifications.filter(n => !n.read).length;
     
     if (badge) {
-        badge.textContent = unreadCount;
+        // Display "99+" if count exceeds 99, otherwise show actual count
+        badge.textContent = unreadCount > 99 ? '99+' : unreadCount;
         badge.style.display = unreadCount > 0 ? 'block' : 'none';
-        console.log('🔢 Badge updated:', unreadCount);
+        console.log('🔢 Badge updated:', unreadCount, '(displaying:', badge.textContent, ')');
     }
 }
 
