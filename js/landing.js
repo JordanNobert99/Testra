@@ -1,3 +1,29 @@
+// Dark Mode Toggle
+const darkModeToggle = document.getElementById('darkModeToggle');
+const body = document.body;
+
+// Check for saved dark mode preference
+const darkModeEnabled = localStorage.getItem('darkMode') === 'enabled';
+
+if (darkModeEnabled) {
+    body.classList.add('dark-mode');
+}
+
+if (darkModeToggle) {
+    darkModeToggle.addEventListener('click', () => {
+        body.classList.toggle('dark-mode');
+        
+        // Save preference to localStorage
+        if (body.classList.contains('dark-mode')) {
+            localStorage.setItem('darkMode', 'enabled');
+            console.log('?? Dark mode enabled');
+        } else {
+            localStorage.setItem('darkMode', 'disabled');
+            console.log('?? Dark mode disabled');
+        }
+    });
+}
+
 // Mobile Navigation Toggle
 const navToggle = document.getElementById('navToggle');
 const navMenu = document.getElementById('navMenu');
@@ -30,19 +56,6 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Contact form submission
-const contactForm = document.getElementById('contactForm');
-if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-
-        // Here you would typically send the form data to your backend
-        // For now, just show an alert
-        alert('Thank you for your message! We will get back to you soon.');
-        contactForm.reset();
-    });
-}
-
 // Add active state to navigation on scroll
 window.addEventListener('scroll', () => {
     const sections = document.querySelectorAll('section[id]');
@@ -60,3 +73,5 @@ window.addEventListener('scroll', () => {
         }
     });
 });
+
+console.log('?? Landing page loaded');
