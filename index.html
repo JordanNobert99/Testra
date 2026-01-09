@@ -6,9 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
     <!-- SEO Meta Tags -->
-    <title>Testra</title>
+    <title>Testra - Business Solutions</title>
     <meta name="description" content="Professional drug and alcohol testing, custom website design, and comprehensive IT services for businesses in Canada.">
-    <meta name="keywords" content="drug testing, alcohol testing, web design, IT services, business solutions">
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -27,13 +26,14 @@
                 <h1>Testra</h1>
             </div>
             <div class="nav-menu" id="navMenu">
-                <a href="#home" class="nav-link">Home</a>
                 <a href="#services" class="nav-link">Services</a>
-                <a href="#about" class="nav-link">About</a>
                 <a href="#contact" class="nav-link">Contact</a>
-                <a href="login.html" class="nav-link nav-link-cta">Client Login</a>
+                <button class="dark-mode-toggle" id="darkModeToggle" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <a href="login.html" class="nav-link nav-link-cta">Client Portal</a>
             </div>
-            <button class="nav-toggle" id="navToggle">
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
                 <i class="fas fa-bars"></i>
             </button>
         </div>
@@ -42,14 +42,11 @@
     <!-- Hero Section -->
     <section id="home" class="hero">
         <div class="hero-content">
-            <h1 class="hero-title">Complete Business Solutions</h1>
-            <p class="hero-subtitle">Drug & Alcohol Testing • Web Design • IT Services</p>
-            <p class="hero-description">
-                Professional services tailored to your business needs. From certified testing to custom digital solutions, we've got you covered.
-            </p>
+            <h1 class="hero-title">Your Business, Simplified</h1>
+            <p class="hero-subtitle">Drug & Alcohol Testing â€¢ Web Design â€¢ IT Services</p>
             <div class="hero-buttons">
                 <a href="#services" class="btn btn-primary">Explore Services</a>
-                <a href="#contact" class="btn btn-secondary">Get In Touch</a>
+                <a href="#contact" class="btn btn-secondary">Get Started</a>
             </div>
         </div>
     </section>
@@ -57,8 +54,7 @@
     <!-- Services Section -->
     <section id="services" class="services">
         <div class="container">
-            <h2 class="section-title">Our Services</h2>
-            <p class="section-subtitle">Comprehensive solutions for modern businesses</p>
+            <h2 class="section-title">What We Do</h2>
 
             <div class="services-grid">
                 <!-- Drug Testing -->
@@ -67,13 +63,7 @@
                         <i class="fas fa-vial"></i>
                     </div>
                     <h3>Drug & Alcohol Testing</h3>
-                    <p>Certified testing services for workplace safety and compliance. Fast, accurate, and confidential results.</p>
-                    <ul class="service-features">
-                        <li><i class="fas fa-check"></i> DOT & Non-DOT Testing</li>
-                        <li><i class="fas fa-check"></i> On-Site Services Available</li>
-                        <li><i class="fas fa-check"></i> Quick Turnaround Times</li>
-                        <li><i class="fas fa-check"></i> Third-Party Partnerships</li>
-                    </ul>
+                    <p>Certified testing services for workplace safety and compliance with fast, confidential results.</p>
                 </div>
 
                 <!-- Web Design -->
@@ -82,13 +72,7 @@
                         <i class="fas fa-laptop-code"></i>
                     </div>
                     <h3>Website Design</h3>
-                    <p>Custom-built websites that represent your brand and drive results. Modern, responsive, and user-friendly.</p>
-                    <ul class="service-features">
-                        <li><i class="fas fa-check"></i> Custom Design & Development</li>
-                        <li><i class="fas fa-check"></i> Mobile-Responsive Layouts</li>
-                        <li><i class="fas fa-check"></i> SEO Optimization</li>
-                        <li><i class="fas fa-check"></i> Content Management Systems</li>
-                    </ul>
+                    <p>Custom-built websites that represent your brand. Modern, responsive, and optimized for results.</p>
                 </div>
 
                 <!-- IT Services -->
@@ -97,59 +81,7 @@
                         <i class="fas fa-server"></i>
                     </div>
                     <h3>IT Services</h3>
-                    <p>Complete IT support and infrastructure management. Keep your business running smoothly with expert assistance.</p>
-                    <ul class="service-features">
-                        <li><i class="fas fa-check"></i> Network Setup & Management</li>
-                        <li><i class="fas fa-check"></i> Cloud Solutions</li>
-                        <li><i class="fas fa-check"></i> Cybersecurity Services</li>
-                        <li><i class="fas fa-check"></i> Technical Support</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Why Choose Us Section -->
-    <section class="why-choose-us">
-        <div class="container">
-            <h2 class="section-title">Why Choose Testra?</h2>
-            <div class="features-grid">
-                <div class="feature-item">
-                    <i class="fas fa-certificate"></i>
-                    <h3>Certified & Compliant</h3>
-                    <p>All services meet industry standards and regulations</p>
-                </div>
-                <div class="feature-item">
-                    <i class="fas fa-clock"></i>
-                    <h3>Fast Service</h3>
-                    <p>Quick turnaround times without compromising quality</p>
-                </div>
-                <div class="feature-item">
-                    <i class="fas fa-headset"></i>
-                    <h3>Expert Support</h3>
-                    <p>Dedicated team available to assist you</p>
-                </div>
-                <div class="feature-item">
-                    <i class="fas fa-shield-alt"></i>
-                    <h3>Secure & Confidential</h3>
-                    <p>Your data and results are protected</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="about">
-        <div class="container">
-            <div class="about-content">
-                <div class="about-text">
-                    <h2 class="section-title">About Testra</h2>
-                    <p>
-                        Testra provides comprehensive business solutions across multiple industries. From certified drug and alcohol testing services to professional web design and IT infrastructure management, we deliver excellence in every project.
-                    </p>
-                    <p>
-                        Our team works with industry partners like SureHire and CannAmm to provide seamless testing services, while our digital experts create custom solutions tailored to your business needs.
-                    </p>
+                    <p>Complete IT support and infrastructure management to keep your business running smoothly.</p>
                 </div>
             </div>
         </div>
@@ -159,7 +91,6 @@
     <section id="contact" class="contact">
         <div class="container">
             <h2 class="section-title">Get In Touch</h2>
-            <p class="section-subtitle">Ready to get started? Contact us today for a consultation.</p>
 
             <div class="contact-content">
                 <div class="contact-info">
@@ -167,44 +98,38 @@
                         <i class="fas fa-envelope"></i>
                         <div>
                             <h3>Email</h3>
-                            <p>info@testra.ca</p>
+                            <a href="mailto:info@testra.ca">info@testra.ca</a>
                         </div>
                     </div>
                     <div class="contact-item">
                         <i class="fas fa-phone"></i>
                         <div>
                             <h3>Phone</h3>
-                            <p>(555) 123-4567</p>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <div>
-                            <h3>Location</h3>
-                            <p>Serving businesses across Canada</p>
+                            <a href="tel:+15551234567">(555) 123-4567</a>
                         </div>
                     </div>
                 </div>
 
-                <form class="contact-form" id="contactForm">
-                    <div class="form-group">
-                        <input type="text" placeholder="Your Name" required>
+                <!-- Netlify Form -->
+                <form class="contact-form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+                    <!-- Hidden fields for Netlify -->
+                    <input type="hidden" name="form-name" value="contact">
+                    <p class="hidden">
+                        <label>Don't fill this out if you're human: <input name="bot-field"></label>
+                    </p>
+
+                    <div class="form-row">
+                        <input type="text" name="name" placeholder="Name" required>
+                        <input type="email" name="email" placeholder="Email" required>
                     </div>
-                    <div class="form-group">
-                        <input type="email" placeholder="Your Email" required>
-                    </div>
-                    <div class="form-group">
-                        <select required>
-                            <option value="">Select Service</option>
-                            <option value="testing">Drug & Alcohol Testing</option>
-                            <option value="web">Website Design</option>
-                            <option value="it">IT Services</option>
-                            <option value="other">General Inquiry</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <textarea rows="5" placeholder="Your Message" required></textarea>
-                    </div>
+                    <select name="service" required>
+                        <option value="">Service Interest</option>
+                        <option value="testing">Drug & Alcohol Testing</option>
+                        <option value="web">Website Design</option>
+                        <option value="it">IT Services</option>
+                        <option value="other">General Inquiry</option>
+                    </select>
+                    <textarea name="message" rows="4" placeholder="Message" required></textarea>
                     <button type="submit" class="btn btn-primary">Send Message</button>
                 </form>
             </div>
@@ -215,27 +140,14 @@
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
-                <div class="footer-section">
+                <div class="footer-brand">
                     <h3>Testra</h3>
-                    <p>Complete business solutions for the modern enterprise.</p>
+                    <p>Professional business solutions</p>
                 </div>
-                <div class="footer-section">
-                    <h4>Quick Links</h4>
-                    <a href="#home">Home</a>
+                <div class="footer-links">
                     <a href="#services">Services</a>
-                    <a href="#about">About</a>
                     <a href="#contact">Contact</a>
-                </div>
-                <div class="footer-section">
-                    <h4>Services</h4>
-                    <a href="#services">Drug Testing</a>
-                    <a href="#services">Web Design</a>
-                    <a href="#services">IT Services</a>
-                </div>
-                <div class="footer-section">
-                    <h4>Client Portal</h4>
-                    <a href="login.html">Login</a>
-                    <a href="login.html">Sign Up</a>
+                    <a href="login.html">Client Portal</a>
                 </div>
             </div>
             <div class="footer-bottom">
