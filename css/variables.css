@@ -1,10 +1,10 @@
 /* Testra Design System - CSS Variables */
 
 :root {
-    /* Primary Brand Colors (from logo) */
-    --color-primary-dark: #083d5e;
-    --color-primary: #1a5d8a;
-    --color-primary-light: #2a7db8;
+    /* Primary Brand Colors - Updated to match testing panel blue */
+    --color-primary-dark: #2563eb;
+    --color-primary: #2d72d2;
+    --color-primary-light: #3b82f6;
     
     /* Text Colors */
     --color-text-primary: #1a1a1a;
@@ -20,13 +20,13 @@
     /* Border Colors */
     --color-border-light: #d0d0d0;
     --color-border-medium: #b3b3b3;
-    --color-border-focus: #1a5d8a;
+    --color-border-focus: #2d72d2;
     
     /* Status Colors */
     --color-success: #22c55e;
     --color-warning: #f59e0b;
     --color-error: #ef4444;
-    --color-info: #1a5d8a;
+    --color-info: #2d72d2;
     
     /* Alert/Message Colors */
     --color-error-bg: #fee;
@@ -34,17 +34,17 @@
     --color-success-bg: #d4edda;
     --color-success-text: #155724;
     
-    /* Gradients */
-    --gradient-primary: linear-gradient(135deg, #083d5e 0%, #1a5d8a 100%);
-    --gradient-sidebar: linear-gradient(180deg, #083d5e 0%, #1a5d8a 100%);
-    --gradient-button: linear-gradient(135deg, #083d5e 0%, #1a5d8a 100%);
+    /* Gradients - Updated to match testing panel */
+    --gradient-primary: linear-gradient(135deg, #2d72d2 0%, #3b82f6 100%);
+    --gradient-sidebar: linear-gradient(180deg, #1e4a72 0%, #2d72d2 100%);
+    --gradient-button: linear-gradient(135deg, #2d72d2 0%, #3b82f6 100%);
     
     /* Shadows */
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
     --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
     --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
     --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
-    --shadow-2xl: 0 20px 60px rgba(8, 61, 94, 0.3);
+    --shadow-2xl: 0 20px 60px rgba(45, 114, 210, 0.3);
     
     /* Border Radius */
     --radius-sm: 4px;
