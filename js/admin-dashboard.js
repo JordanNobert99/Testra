@@ -1,8 +1,34 @@
 ﻿import { auth, db } from './firebase-config.js';
 import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { doc, getDoc, collection, query, where, orderBy, limit, onSnapshot, updateDoc, writeBatch, addDoc, getDocs, deleteDoc, Timestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { doc, getDoc, collection, query, where, orderBy, limit, onSnapshot, updateDoc, writeBatch, addDoc, getDocs, Timestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// Notifications array (populated from Firestore)
+// Dark Mode Toggle
+const darkModeToggle = document.getElementById('darkModeToggle');
+const body = document.body;
+
+// Check for saved dark mode preference
+const darkModeEnabled = localStorage.getItem('darkMode') === 'enabled';
+
+if (darkModeEnabled) {
+    body.classList.add('dark-mode');
+}
+
+if (darkModeToggle) {
+    darkModeToggle.addEventListener('click', () => {
+        body.classList.toggle('dark-mode');
+        
+        // Save preference to localStorage
+        if (body.classList.contains('dark-mode')) {
+            localStorage.setItem('darkMode', 'enabled');
+            console.log('🌙 Dark mode enabled');
+        } else {
+            localStorage.setItem('darkMode', 'disabled');
+            console.log('☀️ Dark mode disabled');
+        }
+    });
+}
+
+// Sample notifications data (will be replaced with Firestore)
 let notifications = [];
 let currentUserId = null;
 
