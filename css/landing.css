@@ -429,7 +429,7 @@ textarea {
 }
 
 .footer-brand p {
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(255, 255, 255, 0.6);
     font-size: var(--font-sm);
 }
 
@@ -455,15 +455,16 @@ textarea {
     font-size: var(--font-sm);
 }
 
-/* Dark Mode - Soft Blue Night Theme */
+/* Dark Mode - Dark Backgrounds with White Text ONLY */
 body.dark-mode {
-    background: #1e293b;
-    color: #e2e8f0;
+    background: #0f172a;
+    color: #f1f5f9;
 }
 
 body.dark-mode .navbar {
-    background: rgba(30, 41, 59, 0.95);
-    border-bottom-color: rgba(148, 163, 184, 0.1);
+    background: rgba(15, 23, 42, 0.95);
+    border-bottom-color: rgba(148, 163, 184, 0.2);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 body.dark-mode .nav-brand h1 {
@@ -482,12 +483,12 @@ body.dark-mode .nav-link:hover {
 }
 
 body.dark-mode .dark-mode-toggle {
-    background: #334155;
+    background: #1e293b;
     color: #cbd5e1;
 }
 
 body.dark-mode .dark-mode-toggle:hover {
-    background: #475569;
+    background: #334155;
     color: #fbbf24;
 }
 
@@ -496,11 +497,22 @@ body.dark-mode .dark-mode-toggle i::before {
 }
 
 body.dark-mode .services {
-    background: #1e293b;
+    background: #0f172a;
 }
 
 body.dark-mode .section-title {
-    color: #5ea3d0;
+    color: #f1f5f9;
+}
+
+body.dark-mode .service-card {
+    background: #1e293b;
+    border-color: #334155;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-mode .service-card:hover {
+    border-color: #3b82f6;
+    box-shadow: 0 20px 40px rgba(59, 130, 246, 0.2);
 }
 
 body.dark-mode .service-card h3 {
@@ -512,18 +524,26 @@ body.dark-mode .service-card p {
 }
 
 body.dark-mode .contact {
-    background: #0f172a;
+    background: #1e293b;
+}
+
+body.dark-mode .contact-item h3 {
+    color: #94a3b8;
 }
 
 body.dark-mode .contact-item a {
     color: #f1f5f9;
 }
 
+body.dark-mode .contact-item a:hover {
+    color: #60a5fa;
+}
+
 body.dark-mode .contact-form input,
 body.dark-mode .contact-form select,
 body.dark-mode .contact-form textarea {
-    background: #334155;
-    border-color: #475569;
+    background: #0f172a;
+    border-color: #334155;
     color: #f1f5f9;
 }
 
@@ -536,7 +556,7 @@ body.dark-mode .contact-form textarea:focus {
 
 body.dark-mode .contact-form input::placeholder,
 body.dark-mode .contact-form textarea::placeholder {
-    color: #94a3b8;
+    color: #64748b;
 }
 
 /* Responsive */
@@ -564,7 +584,7 @@ body.dark-mode .contact-form textarea::placeholder {
     }
 
     body.dark-mode .nav-menu {
-        background: rgba(30, 41, 59, 0.98);
+        background: rgba(15, 23, 42, 0.98);
     }
 
     .nav-menu.active {
