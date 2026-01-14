@@ -137,19 +137,107 @@ document.addEventListener('DOMContentLoaded', () => {
     async function loadPage(page) {
         const contentArea = document.getElementById('contentArea');
         
-        if (page === 'test') {
-            await loadTestingPanel();
-        } else {
-            contentArea.innerHTML = `
-                <div class="page-placeholder">
-                    <i class="fas fa-tools"></i>
-                    <h2>${page.charAt(0).toUpperCase() + page.slice(1)} Page</h2>
-                    <p>This page is under construction.</p>
-                </div>
-            `;
+        // Show loading state
+        contentArea.innerHTML = `
+            <div class="loading">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>Loading...</p>
+            </div>
+        `;
+        
+        // Handle each page
+        switch (page) {
+            case 'test':
+                await loadTestingPanel();
+                break;
+                
+            case 'companies':
+                await loadCompaniesPage();
+                break;
+                
+            case 'overview':
+                await loadOverviewPage();
+                break;
+                
+            case 'calendar':
+                await loadCalendarPage();
+                break;
+                
+            case 'appointments':
+                await loadAppointmentsPage();
+                break;
+                
+            case 'quotes':
+                await loadQuotesPage();
+                break;
+                
+            case 'clients':
+                await loadClientsPage();
+                break;
+                
+            case 'inventory':
+                await loadInventoryPage();
+                break;
+                
+            case 'invoices':
+                await loadInvoicesPage();
+                break;
+                
+            case 'email':
+                await loadEmailPage();
+                break;
+                
+            case 'reports':
+                await loadReportsPage();
+                break;
+                
+            case 'settings':
+                await loadSettingsPage();
+                break;
+                
+            default:
+                contentArea.innerHTML = `
+                    <div class="page-placeholder">
+                        <i class="fas fa-tools"></i>
+                        <h2>${page.charAt(0).toUpperCase() + page.slice(1)} Page</h2>
+                        <p>This page is under construction.</p>
+                    </div>
+                    `;
         }
     }
 });
+
+// ========================================
+// COMPANIES PAGE LOADER
+// ========================================
+
+async function loadCompaniesPage() {
+    const contentArea = document.getElementById('contentArea');
+    
+    try {
+        // Fetch the HTML template
+        const response = await fetch('pages/companies.html');
+        const html = await response.text();
+        
+        contentArea.innerHTML = html;
+        
+        // Dynamically import the companies module
+        const { initializeCompaniesPage } = await import('./companies.js');
+        initializeCompaniesPage();
+        
+        console.log('✅ Companies page loaded');
+    } catch (error) {
+        console.error('❌ Error loading companies page:', error);
+        contentArea.innerHTML = `
+            <div class="page-placeholder">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h2>Error Loading Companies Page</h2>
+                <p>Could not load pages/companies.html</p>
+                <p style="color: #ef4444; font-size: 14px;">${error.message}</p>
+            </div>
+        `;
+    }
+}
 
 // Initialize notifications system
 function initializeNotifications(userId) {
@@ -410,23 +498,31 @@ async function loadTestingPanel() {
         
         contentArea.innerHTML = html;
         
-        // Attach form handler after HTML is loaded
-        const form = document.getElementById('createNotificationForm');
-        if (form) {
-            form.addEventListener('submit', handleCreateNotification);
-        }
+        // Dynamically import the testing panel module
+        const testingPanelModule = await import('./testing-panel.js');
         
-        // Load initial stats
-        loadNotificationStats();
+        // Expose functions to window for onclick handlers
+        window.testingPanel = {
+            sendQuickTest: testingPanelModule.sendQuickTest,
+            sendBulkTest: testingPanelModule.sendBulkTest,
+            loadNotificationStats: testingPanelModule.loadNotificationStats,
+            deleteAllMyNotifications: testingPanelModule.deleteAllMyNotifications,
+            createFirestoreIndex: testingPanelModule.createFirestoreIndex,
+            loadAllUsers: testingPanelModule.loadAllUsers
+        };
         
-        console.log('Testing panel loaded');
+        // Initialize the testing panel with current user ID
+        testingPanelModule.initializeTestingPanel(currentUserId);
+        
+        console.log('✅ Testing panel loaded');
     } catch (error) {
-        console.error('Error loading testing panel:', error);
+        console.error('❌ Error loading testing panel:', error);
         contentArea.innerHTML = `
             <div class="page-placeholder">
                 <i class="fas fa-exclamation-triangle"></i>
                 <h2>Error Loading Testing Panel</h2>
                 <p>Could not load pages/testing-panel.html</p>
+                <p style="color: #ef4444; font-size: 14px;">${error.message}</p>
             </div>
         `;
     }

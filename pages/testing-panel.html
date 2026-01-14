@@ -53,25 +53,25 @@
             <div class="test-card-body">
                 <p>Send preset test notifications:</p>
 
-                <button onclick="sendQuickTest('info')" class="test-btn test-btn-info">
+                <button onclick="window.testingPanel.sendQuickTest('info')" class="test-btn test-btn-info">
                     <i class="fas fa-info-circle"></i> Send Info Test
                 </button>
 
-                <button onclick="sendQuickTest('success')" class="test-btn test-btn-success">
+                <button onclick="window.testingPanel.sendQuickTest('success')" class="test-btn test-btn-success">
                     <i class="fas fa-check-circle"></i> Send Success Test
                 </button>
 
-                <button onclick="sendQuickTest('warning')" class="test-btn test-btn-warning">
+                <button onclick="window.testingPanel.sendQuickTest('warning')" class="test-btn test-btn-warning">
                     <i class="fas fa-exclamation-triangle"></i> Send Warning Test
                 </button>
 
-                <button onclick="sendQuickTest('error')" class="test-btn test-btn-error">
+                <button onclick="window.testingPanel.sendQuickTest('error')" class="test-btn test-btn-error">
                     <i class="fas fa-exclamation-circle"></i> Send Error Test
                 </button>
 
-                <hr style="margin: 20px 0; border: none; border-top: 1px solid var(--color-border-light);">
+                <hr>
 
-                <button onclick="sendBulkTest()" class="test-btn test-btn-bulk">
+                <button onclick="window.testingPanel.sendBulkTest()" class="test-btn test-btn-bulk">
                     <i class="fas fa-layer-group"></i> Send 5 Random Notifications
                 </button>
             </div>
@@ -93,15 +93,15 @@
                     <div class="stat-value" id="unreadNotifications">-</div>
                 </div>
 
-                <button onclick="loadNotificationStats()" class="test-btn">
+                <button onclick="window.testingPanel.loadNotificationStats()" class="test-btn">
                     <i class="fas fa-sync"></i> Refresh Stats
                 </button>
 
-                <button onclick="deleteAllMyNotifications()" class="test-btn test-btn-danger">
+                <button onclick="window.testingPanel.deleteAllMyNotifications()" class="test-btn test-btn-danger">
                     <i class="fas fa-trash"></i> Delete All My Notifications
                 </button>
 
-                <button onclick="createFirestoreIndex()" class="test-btn">
+                <button onclick="window.testingPanel.createFirestoreIndex()" class="test-btn">
                     <i class="fas fa-list"></i> Show Index Setup
                 </button>
             </div>
@@ -115,7 +115,7 @@
             <div class="test-card-body">
                 <p>Send notifications to any user:</p>
                 <div id="usersList">
-                    <button onclick="loadAllUsers()" class="test-btn">
+                    <button onclick="window.testingPanel.loadAllUsers()" class="test-btn">
                         <i class="fas fa-user-friends"></i> Load All Users
                     </button>
                 </div>

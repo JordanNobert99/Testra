@@ -1,0 +1,239 @@
+<div class="companies-page">
+    <div class="page-header">
+        <div class="page-header-left">
+            <h2><i class="fas fa-building"></i> Companies Management</h2>
+            <p>Manage client companies and their information</p>
+        </div>
+        <div class="page-header-right">
+            <button class="btn-primary" id="addCompanyBtn">
+                <i class="fas fa-plus"></i> Add Company
+            </button>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon stat-icon-blue">
+                <i class="fas fa-building"></i>
+            </div>
+            <div class="stat-content">
+                <div class="stat-label">Total Companies</div>
+                <div class="stat-value" id="totalCompanies">0</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon stat-icon-green">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="stat-content">
+                <div class="stat-label">Active</div>
+                <div class="stat-value" id="activeCompanies">0</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon stat-icon-yellow">
+                <i class="fas fa-pause-circle"></i>
+            </div>
+            <div class="stat-content">
+                <div class="stat-label">Inactive</div>
+                <div class="stat-value" id="inactiveCompanies">0</div>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon stat-icon-purple">
+                <i class="fas fa-vial"></i>
+            </div>
+            <div class="stat-content">
+                <div class="stat-label">Testing Clients</div>
+                <div class="stat-value" id="testingCompanies">0</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search and Filter -->
+    <div class="toolbar">
+        <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchCompanies" placeholder="Search companies..." class="search-input">
+        </div>
+        <div class="filter-group">
+            <select id="filterService" class="filter-select">
+                <option value="">All Services</option>
+                <option value="testing">Drug & Alcohol Testing</option>
+                <option value="web">Website Design</option>
+                <option value="it">IT Services</option>
+            </select>
+            <select id="filterStatus" class="filter-select">
+                <option value="">All Status</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Companies Table -->
+    <div class="table-card">
+        <div class="table-responsive">
+            <table class="data-table" id="companiesTable">
+                <thead>
+                    <tr>
+                        <th>Company Name</th>
+                        <th>Contact Person</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Service</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="companiesTableBody">
+                    <tr class="loading-row">
+                        <td colspan="7">
+                            <div class="loading">
+                                <i class="fas fa-spinner fa-spin"></i>
+                                <p>Loading companies...</p>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="empty-state" id="emptyState" style="display: none;">
+        <i class="fas fa-building"></i>
+        <h3>No Companies Found</h3>
+        <p>Start by adding your first company</p>
+        <button class="btn-primary" onclick="document.getElementById('addCompanyBtn').click()">
+            <i class="fas fa-plus"></i> Add Company
+        </button>
+    </div>
+</div>
+
+<!-- Add/Edit Company Modal -->
+<div class="modal" id="companyModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modalTitle"><i class="fas fa-building"></i> Add Company</h3>
+            <button class="modal-close" id="closeModal">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="companyForm">
+                <input type="hidden" id="companyId">
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Company Name *</label>
+                        <input type="text" id="companyName" class="form-input" placeholder="Enter company name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Contact Person *</label>
+                        <input type="text" id="contactPerson" class="form-input" placeholder="Enter contact name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Email *</label>
+                        <input type="email" id="companyEmail" class="form-input" placeholder="company@example.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Phone *</label>
+                        <input type="tel" id="companyPhone" class="form-input" placeholder="(780) 123-4567" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Service Type *</label>
+                        <select id="serviceType" class="form-input" required>
+                            <option value="">Select service</option>
+                            <option value="testing">Drug & Alcohol Testing</option>
+                            <option value="web">Website Design</option>
+                            <option value="it">IT Services</option>
+                            <option value="multiple">Multiple Services</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Status *</label>
+                        <select id="companyStatus" class="form-input" required>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Address</label>
+                    <input type="text" id="companyAddress" class="form-input" placeholder="Street address">
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>City</label>
+                        <input type="text" id="companyCity" class="form-input" placeholder="City">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Province</label>
+                        <select id="companyProvince" class="form-input">
+                            <option value="">Select province</option>
+                            <option value="AB">Alberta</option>
+                            <option value="BC">British Columbia</option>
+                            <option value="MB">Manitoba</option>
+                            <option value="NB">New Brunswick</option>
+                            <option value="NL">Newfoundland and Labrador</option>
+                            <option value="NS">Nova Scotia</option>
+                            <option value="ON">Ontario</option>
+                            <option value="PE">Prince Edward Island</option>
+                            <option value="QC">Quebec</option>
+                            <option value="SK">Saskatchewan</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Postal Code</label>
+                        <input type="text" id="companyPostal" class="form-input" placeholder="T5K 2G6">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Notes</label>
+                    <textarea id="companyNotes" class="form-input" rows="3" placeholder="Additional notes or comments..."></textarea>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i> Save Company
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal" id="deleteModal">
+    <div class="modal-content modal-small">
+        <div class="modal-header">
+            <h3><i class="fas fa-exclamation-triangle"></i> Confirm Delete</h3>
+            <button class="modal-close" id="closeDeleteModal">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p>Are you sure you want to delete <strong id="deleteCompanyName"></strong>?</p>
+            <p class="text-muted">This action cannot be undone.</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn-secondary" id="cancelDeleteBtn">Cancel</button>
+            <button type="button" class="btn-danger" id="confirmDeleteBtn">
+                <i class="fas fa-trash"></i> Delete
+            </button>
+        </div>
+    </div>
+</div>
