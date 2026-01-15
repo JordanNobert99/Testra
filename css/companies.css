@@ -458,6 +458,19 @@
     gap: var(--space-lg);
 }
 
+.form-section-heading {
+    display: block;
+    margin-bottom: var(--space-sm);
+    font-size: var(--font-sm);
+    font-weight: var(--font-semibold);
+    color: #0f172a;
+    transition: color var(--transition-base);
+}
+
+body.dark-mode .form-section-heading {
+    color: #f1f5f9;
+}
+
 .btn-secondary {
     padding: var(--space-md) var(--space-xl);
     background: #f1f5f9;

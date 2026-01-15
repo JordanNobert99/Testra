@@ -1,4 +1,4 @@
-import { db } from './firebase-config.js';
+﻿import { db } from './firebase-config.js';
 import { collection, query, orderBy, onSnapshot, addDoc, updateDoc, deleteDoc, doc, Timestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 let companiesData = [];
@@ -6,7 +6,7 @@ let currentCompanyId = null;
 
 // Initialize the Companies page
 export function initializeCompaniesPage() {
-    console.log('?? Initializing Companies page...');
+    console.log('🏢 Initializing Companies page...');
 
     // Load companies data
     loadCompanies();
@@ -17,6 +17,8 @@ export function initializeCompaniesPage() {
 
 // Setup all event listeners
 function setupEventListeners() {
+    console.log('⚙️ Setting up event listeners...');
+
     // Modal controls
     const addCompanyBtn = document.getElementById('addCompanyBtn');
     const companyModal = document.getElementById('companyModal');
@@ -36,9 +38,33 @@ function setupEventListeners() {
     // Add company button
     if (addCompanyBtn) {
         addCompanyBtn.addEventListener('click', () => {
+            console.log('➕ Add Company button clicked');
             openCompanyModal();
         });
     }
+
+    // *** EVENT DELEGATION FOR ADD EMAIL/PHONE BUTTONS ***
+    document.addEventListener('click', (e) => {
+        console.log('🖱️ Document clicked:', e.target);
+
+        // Check if clicked element is the Add Email button or its child
+        const addEmailBtn = e.target.closest('#addEmailBtn');
+        if (addEmailBtn) {
+            e.preventDefault();
+            console.log('📧 ADD EMAIL BUTTON CLICKED!');
+            addEmailField();
+            return;
+        }
+
+        // Check if clicked element is the Add Phone button or its child
+        const addPhoneBtn = e.target.closest('#addPhoneBtn');
+        if (addPhoneBtn) {
+            e.preventDefault();
+            console.log('📞 ADD PHONE BUTTON CLICKED!');
+            addPhoneField();
+            return;
+        }
+    });
 
     // Close modal handlers
     if (closeModal) closeModal.addEventListener('click', () => companyModal.classList.remove('show'));
@@ -82,11 +108,20 @@ function setupEventListeners() {
     if (filterStatus) {
         filterStatus.addEventListener('change', filterCompanies);
     }
+
+    console.log('✅ Event listeners setup complete');
 }
 
 // Add email field
 function addEmailField(email = '', label = '') {
+    console.log('📧 addEmailField() called with:', email, label);
     const container = document.getElementById('emailsContainer');
+
+    if (!container) {
+        console.error('❌ emailsContainer not found!');
+        return;
+    }
+
     const fieldGroup = document.createElement('div');
     fieldGroup.className = 'contact-field-group';
 
@@ -107,6 +142,7 @@ function addEmailField(email = '', label = '') {
     removeBtn.className = 'btn-remove-field';
     removeBtn.innerHTML = '<i class="fas fa-times"></i>';
     removeBtn.addEventListener('click', () => {
+        console.log('🗑️ Removing email field');
         fieldGroup.remove();
     });
 
@@ -114,11 +150,20 @@ function addEmailField(email = '', label = '') {
     fieldGroup.appendChild(labelInput);
     fieldGroup.appendChild(removeBtn);
     container.appendChild(fieldGroup);
+
+    console.log('✅ Email field added. Container now has', container.children.length, 'fields');
 }
 
 // Add phone field
 function addPhoneField(phone = '', label = '') {
+    console.log('📞 addPhoneField() called with:', phone, label);
     const container = document.getElementById('phonesContainer');
+
+    if (!container) {
+        console.error('❌ phonesContainer not found!');
+        return;
+    }
+
     const fieldGroup = document.createElement('div');
     fieldGroup.className = 'contact-field-group';
 
@@ -139,6 +184,7 @@ function addPhoneField(phone = '', label = '') {
     removeBtn.className = 'btn-remove-field';
     removeBtn.innerHTML = '<i class="fas fa-times"></i>';
     removeBtn.addEventListener('click', () => {
+        console.log('🗑️ Removing phone field');
         fieldGroup.remove();
     });
 
@@ -146,6 +192,8 @@ function addPhoneField(phone = '', label = '') {
     fieldGroup.appendChild(labelInput);
     fieldGroup.appendChild(removeBtn);
     container.appendChild(fieldGroup);
+
+    console.log('✅ Phone field added. Container now has', container.children.length, 'fields');
 }
 
 // Load companies from Firestore with real-time updates
@@ -160,15 +208,15 @@ async function loadCompanies() {
                 ...doc.data()
             }));
 
-            console.log('? Companies loaded:', companiesData.length);
+            console.log('✅ Companies loaded:', companiesData.length);
             renderCompanies(companiesData);
             updateCompaniesStats(companiesData);
         }, (error) => {
-            console.error('? Error loading companies:', error);
+            console.error('❌ Error loading companies:', error);
             showError('Error loading companies: ' + error.message);
         });
     } catch (error) {
-        console.error('? Error setting up companies listener:', error);
+        console.error('❌ Error setting up companies listener:', error);
         showError('Error loading companies: ' + error.message);
     }
 }
@@ -326,6 +374,8 @@ function filterCompanies() {
 
 // Open modal for add/edit
 function openCompanyModal(companyId = null) {
+    console.log('🔓 openCompanyModal() called with ID:', companyId);
+
     const modal = document.getElementById('companyModal');
     const form = document.getElementById('companyForm');
     const modalTitle = document.getElementById('modalTitle');
@@ -336,8 +386,10 @@ function openCompanyModal(companyId = null) {
     currentCompanyId = null;
 
     // Clear dynamic fields
-    document.getElementById('emailsContainer').innerHTML = '';
-    document.getElementById('phonesContainer').innerHTML = '';
+    const emailsContainer = document.getElementById('emailsContainer');
+    const phonesContainer = document.getElementById('phonesContainer');
+    emailsContainer.innerHTML = '';
+    phonesContainer.innerHTML = '';
 
     if (companyId) {
         // Edit mode
@@ -353,6 +405,7 @@ function openCompanyModal(companyId = null) {
 
             // Populate emails
             if (company.emails && company.emails.length > 0) {
+                console.log('📧 Adding', company.emails.length, 'existing emails');
                 company.emails.forEach(email => addEmailField(email.value, email.label));
             } else {
                 addEmailField();
@@ -360,6 +413,7 @@ function openCompanyModal(companyId = null) {
 
             // Populate phones
             if (company.phones && company.phones.length > 0) {
+                console.log('📞 Adding', company.phones.length, 'existing phones');
                 company.phones.forEach(phone => addPhoneField(phone.value, phone.label));
             } else {
                 addPhoneField();
@@ -370,40 +424,44 @@ function openCompanyModal(companyId = null) {
     } else {
         // Add mode
         modalTitle.innerHTML = '<i class="fas fa-building"></i> Add Company';
+        console.log('📧 Adding initial email field');
         addEmailField();
+        console.log('📞 Adding initial phone field');
         addPhoneField();
     }
 
     // Show modal
     modal.classList.add('show');
+    
+    // *** ADD DIRECT EVENT LISTENERS AFTER MODAL IS SHOWN ***
+    setTimeout(() => {
+        const addEmailBtn = document.getElementById('addEmailBtn');
+        const addPhoneBtn = document.getElementById('addPhoneBtn');
+        
+        if (addEmailBtn) {
+            // Remove any existing listeners and add new one
+            const newEmailBtn = addEmailBtn.cloneNode(true);
+            addEmailBtn.parentNode.replaceChild(newEmailBtn, addEmailBtn);
+            newEmailBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                console.log('📧 ADD EMAIL BUTTON CLICKED via direct listener!');
+                addEmailField();
+            });
+        }
+        
+        if (addPhoneBtn) {
+            // Remove any existing listeners and add new one
+            const newPhoneBtn = addPhoneBtn.cloneNode(true);
+            addPhoneBtn.parentNode.replaceChild(newPhoneBtn, addPhoneBtn);
+            newPhoneBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                console.log('📞 ADD PHONE BUTTON CLICKED via direct listener!');
+                addPhoneField();
+            });
+        }
+    }, 0);
 
-    // Setup add field button listeners AFTER modal is shown
-    const addEmailBtn = document.getElementById('addEmailBtn');
-    const addPhoneBtn = document.getElementById('addPhoneBtn');
-
-    if (addEmailBtn) {
-        // Clone to remove old listeners
-        const newAddEmailBtn = addEmailBtn.cloneNode(true);
-        addEmailBtn.parentNode.replaceChild(newAddEmailBtn, addEmailBtn);
-
-        newAddEmailBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            addEmailField();
-            console.log('? Email field added');
-        });
-    }
-
-    if (addPhoneBtn) {
-        // Clone to remove old listeners
-        const newAddPhoneBtn = addPhoneBtn.cloneNode(true);
-        addPhoneBtn.parentNode.replaceChild(newAddPhoneBtn, addPhoneBtn);
-
-        newAddPhoneBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            addPhoneField();
-            console.log('? Phone field added');
-        });
-    }
+    console.log('✅ Modal shown');
 }
 
 // Collect emails from form
@@ -475,19 +533,19 @@ async function handleCompanySubmit(e) {
             // Update existing company
             const companyRef = doc(db, 'companies', currentCompanyId);
             await updateDoc(companyRef, companyData);
-            console.log('? Company updated:', currentCompanyId);
+            console.log('✅ Company updated:', currentCompanyId);
             showSuccess('Company updated successfully!');
         } else {
             // Add new company
             companyData.createdAt = Timestamp.now();
             const docRef = await addDoc(collection(db, 'companies'), companyData);
-            console.log('? Company created:', docRef.id);
+            console.log('✅ Company created:', docRef.id);
             showSuccess('Company added successfully!');
         }
 
         document.getElementById('companyModal').classList.remove('show');
     } catch (error) {
-        console.error('? Error saving company:', error);
+        console.error('❌ Error saving company:', error);
         showError('Error saving company: ' + error.message);
     }
 }
@@ -509,13 +567,13 @@ async function handleCompanyDelete() {
     try {
         const companyRef = doc(db, 'companies', currentCompanyId);
         await deleteDoc(companyRef);
-        console.log('? Company deleted:', currentCompanyId);
+        console.log('✅ Company deleted:', currentCompanyId);
         showSuccess('Company deleted successfully!');
 
         document.getElementById('deleteModal').classList.remove('show');
         currentCompanyId = null;
     } catch (error) {
-        console.error('? Error deleting company:', error);
+        console.error('❌ Error deleting company:', error);
         showError('Error deleting company: ' + error.message);
     }
 }
@@ -553,7 +611,7 @@ function escapeHtml(text) {
 
 // Show success message
 function showSuccess(message) {
-    alert('? ' + message);
+    alert('✅ ' + message);
 }
 
 // Show error message
@@ -569,6 +627,6 @@ function showError(message) {
             </tr>
         `;
     } else {
-        alert('? ' + message);
+        alert('❌ ' + message);
     }
 }
