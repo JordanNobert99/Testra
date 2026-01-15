@@ -84,6 +84,70 @@ function setupEventListeners() {
     }
 }
 
+// Add email field
+function addEmailField(email = '', label = '') {
+    const container = document.getElementById('emailsContainer');
+    const fieldGroup = document.createElement('div');
+    fieldGroup.className = 'contact-field-group';
+
+    const emailInput = document.createElement('input');
+    emailInput.type = 'email';
+    emailInput.className = 'form-input';
+    emailInput.placeholder = 'Email address';
+    emailInput.value = email;
+
+    const labelInput = document.createElement('input');
+    labelInput.type = 'text';
+    labelInput.className = 'form-input label-input';
+    labelInput.placeholder = 'Label (e.g., Main, Billing)';
+    labelInput.value = label;
+
+    const removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.className = 'btn-remove-field';
+    removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+    removeBtn.addEventListener('click', () => {
+        fieldGroup.remove();
+    });
+
+    fieldGroup.appendChild(emailInput);
+    fieldGroup.appendChild(labelInput);
+    fieldGroup.appendChild(removeBtn);
+    container.appendChild(fieldGroup);
+}
+
+// Add phone field
+function addPhoneField(phone = '', label = '') {
+    const container = document.getElementById('phonesContainer');
+    const fieldGroup = document.createElement('div');
+    fieldGroup.className = 'contact-field-group';
+
+    const phoneInput = document.createElement('input');
+    phoneInput.type = 'tel';
+    phoneInput.className = 'form-input';
+    phoneInput.placeholder = 'Phone number';
+    phoneInput.value = phone;
+
+    const labelInput = document.createElement('input');
+    labelInput.type = 'text';
+    labelInput.className = 'form-input label-input';
+    labelInput.placeholder = 'Label (e.g., Office, Mobile)';
+    labelInput.value = label;
+
+    const removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.className = 'btn-remove-field';
+    removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+    removeBtn.addEventListener('click', () => {
+        fieldGroup.remove();
+    });
+
+    fieldGroup.appendChild(phoneInput);
+    fieldGroup.appendChild(labelInput);
+    fieldGroup.appendChild(removeBtn);
+    container.appendChild(fieldGroup);
+}
+
 // Load companies from Firestore with real-time updates
 async function loadCompanies() {
     try {
@@ -128,8 +192,7 @@ function renderCompanies(companies) {
         <tr>
             <td><strong>${escapeHtml(company.companyName)}</strong></td>
             <td>${escapeHtml(company.contactPerson)}</td>
-            <td><a href="mailto:${escapeHtml(company.email)}" style="color: var(--color-primary);">${escapeHtml(company.email)}</a></td>
-            <td><a href="tel:${escapeHtml(company.phone)}" style="color: var(--color-primary);">${escapeHtml(company.phone)}</a></td>
+            <td>${renderContactInfo(company)}</td>
             <td><span class="service-badge service-${company.serviceType}">${formatServiceType(company.serviceType)}</span></td>
             <td><span class="status-badge status-${company.status}"><i class="fas fa-circle"></i> ${capitalizeFirst(company.status)}</span></td>
             <td>
@@ -147,6 +210,44 @@ function renderCompanies(companies) {
 
     // Attach event listeners to action buttons
     attachActionButtonListeners();
+}
+
+// Render contact info for display
+function renderContactInfo(company) {
+    let html = '<div class="contact-info-display">';
+
+    // Render emails
+    if (company.emails && company.emails.length > 0) {
+        company.emails.forEach(email => {
+            if (email.value) {
+                html += `
+                    <div class="contact-info-item">
+                        <i class="fas fa-envelope"></i>
+                        <span class="contact-label">${escapeHtml(email.label || 'Email')}:</span>
+                        <a href="mailto:${escapeHtml(email.value)}" class="contact-value">${escapeHtml(email.value)}</a>
+                    </div>
+                `;
+            }
+        });
+    }
+
+    // Render phones
+    if (company.phones && company.phones.length > 0) {
+        company.phones.forEach(phone => {
+            if (phone.value) {
+                html += `
+                    <div class="contact-info-item">
+                        <i class="fas fa-phone"></i>
+                        <span class="contact-label">${escapeHtml(phone.label || 'Phone')}:</span>
+                        <a href="tel:${escapeHtml(phone.value)}" class="contact-value">${escapeHtml(phone.value)}</a>
+                    </div>
+                `;
+            }
+        });
+    }
+
+    html += '</div>';
+    return html;
 }
 
 // Attach event listeners to dynamically created action buttons
@@ -190,12 +291,24 @@ function filterCompanies() {
 
     // Search filter
     if (searchTerm) {
-        filtered = filtered.filter(company =>
-            company.companyName.toLowerCase().includes(searchTerm) ||
-            company.contactPerson.toLowerCase().includes(searchTerm) ||
-            company.email.toLowerCase().includes(searchTerm) ||
-            company.phone.includes(searchTerm)
-        );
+        filtered = filtered.filter(company => {
+            const nameMatch = company.companyName.toLowerCase().includes(searchTerm);
+            const contactMatch = company.contactPerson.toLowerCase().includes(searchTerm);
+
+            // Search in emails
+            const emailMatch = company.emails?.some(email =>
+                email.value.toLowerCase().includes(searchTerm) ||
+                email.label.toLowerCase().includes(searchTerm)
+            );
+
+            // Search in phones
+            const phoneMatch = company.phones?.some(phone =>
+                phone.value.includes(searchTerm) ||
+                phone.label.toLowerCase().includes(searchTerm)
+            );
+
+            return nameMatch || contactMatch || emailMatch || phoneMatch;
+        });
     }
 
     // Service filter
@@ -222,6 +335,10 @@ function openCompanyModal(companyId = null) {
     document.getElementById('companyId').value = '';
     currentCompanyId = null;
 
+    // Clear dynamic fields
+    document.getElementById('emailsContainer').innerHTML = '';
+    document.getElementById('phonesContainer').innerHTML = '';
+
     if (companyId) {
         // Edit mode
         const company = companiesData.find(c => c.id === companyId);
@@ -230,40 +347,125 @@ function openCompanyModal(companyId = null) {
             document.getElementById('companyId').value = company.id;
             document.getElementById('companyName').value = company.companyName;
             document.getElementById('contactPerson').value = company.contactPerson;
-            document.getElementById('companyEmail').value = company.email;
-            document.getElementById('companyPhone').value = company.phone;
             document.getElementById('serviceType').value = company.serviceType;
             document.getElementById('companyStatus').value = company.status;
-            document.getElementById('companyAddress').value = company.address || '';
-            document.getElementById('companyCity').value = company.city || '';
-            document.getElementById('companyProvince').value = company.province || '';
-            document.getElementById('companyPostal').value = company.postalCode || '';
             document.getElementById('companyNotes').value = company.notes || '';
+
+            // Populate emails
+            if (company.emails && company.emails.length > 0) {
+                company.emails.forEach(email => addEmailField(email.value, email.label));
+            } else {
+                addEmailField();
+            }
+
+            // Populate phones
+            if (company.phones && company.phones.length > 0) {
+                company.phones.forEach(phone => addPhoneField(phone.value, phone.label));
+            } else {
+                addPhoneField();
+            }
+
             currentCompanyId = companyId;
         }
     } else {
         // Add mode
         modalTitle.innerHTML = '<i class="fas fa-building"></i> Add Company';
+        addEmailField();
+        addPhoneField();
     }
 
+    // Show modal
     modal.classList.add('show');
+
+    // Setup add field button listeners AFTER modal is shown
+    const addEmailBtn = document.getElementById('addEmailBtn');
+    const addPhoneBtn = document.getElementById('addPhoneBtn');
+
+    if (addEmailBtn) {
+        // Clone to remove old listeners
+        const newAddEmailBtn = addEmailBtn.cloneNode(true);
+        addEmailBtn.parentNode.replaceChild(newAddEmailBtn, addEmailBtn);
+
+        newAddEmailBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            addEmailField();
+            console.log('? Email field added');
+        });
+    }
+
+    if (addPhoneBtn) {
+        // Clone to remove old listeners
+        const newAddPhoneBtn = addPhoneBtn.cloneNode(true);
+        addPhoneBtn.parentNode.replaceChild(newAddPhoneBtn, addPhoneBtn);
+
+        newAddPhoneBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            addPhoneField();
+            console.log('? Phone field added');
+        });
+    }
+}
+
+// Collect emails from form
+function collectEmails() {
+    const emailFields = document.querySelectorAll('#emailsContainer .contact-field-group');
+    const emails = [];
+
+    emailFields.forEach(field => {
+        const emailInput = field.querySelector('input[type="email"]');
+        const labelInput = field.querySelector('.label-input');
+
+        if (emailInput && emailInput.value.trim()) {
+            emails.push({
+                value: emailInput.value.trim(),
+                label: labelInput.value.trim() || 'Email'
+            });
+        }
+    });
+
+    return emails;
+}
+
+// Collect phones from form
+function collectPhones() {
+    const phoneFields = document.querySelectorAll('#phonesContainer .contact-field-group');
+    const phones = [];
+
+    phoneFields.forEach(field => {
+        const phoneInput = field.querySelector('input[type="tel"]');
+        const labelInput = field.querySelector('.label-input');
+
+        if (phoneInput && phoneInput.value.trim()) {
+            phones.push({
+                value: phoneInput.value.trim(),
+                label: labelInput.value.trim() || 'Phone'
+            });
+        }
+    });
+
+    return phones;
 }
 
 // Handle form submission
 async function handleCompanySubmit(e) {
     e.preventDefault();
 
+    const emails = collectEmails();
+    const phones = collectPhones();
+
+    // Validate at least one contact method
+    if (emails.length === 0 && phones.length === 0) {
+        showError('Please add at least one email or phone number');
+        return;
+    }
+
     const companyData = {
         companyName: document.getElementById('companyName').value.trim(),
         contactPerson: document.getElementById('contactPerson').value.trim(),
-        email: document.getElementById('companyEmail').value.trim(),
-        phone: document.getElementById('companyPhone').value.trim(),
+        emails: emails,
+        phones: phones,
         serviceType: document.getElementById('serviceType').value,
         status: document.getElementById('companyStatus').value,
-        address: document.getElementById('companyAddress').value.trim(),
-        city: document.getElementById('companyCity').value.trim(),
-        province: document.getElementById('companyProvince').value,
-        postalCode: document.getElementById('companyPostal').value.trim(),
         notes: document.getElementById('companyNotes').value.trim(),
         updatedAt: Timestamp.now()
     };
@@ -338,6 +540,7 @@ function capitalizeFirst(str) {
 
 // Escape HTML to prevent XSS
 function escapeHtml(text) {
+    if (!text) return '';
     const map = {
         '&': '&amp;',
         '<': '&lt;',
@@ -345,7 +548,7 @@ function escapeHtml(text) {
         '"': '&quot;',
         "'": '&#039;'
     };
-    return text.replace(/[&<>"']/g, m => map[m]);
+    return String(text).replace(/[&<>"']/g, m => map[m]);
 }
 
 // Show success message
@@ -359,7 +562,7 @@ function showError(message) {
     if (tableBody && companiesData.length === 0) {
         tableBody.innerHTML = `
             <tr>
-                <td colspan="7" style="text-align: center; padding: 40px; color: #ef4444;">
+                <td colspan="6" style="text-align: center; padding: 40px; color: #ef4444;">
                     <i class="fas fa-exclamation-triangle" style="font-size: 32px; margin-bottom: 10px;"></i>
                     <p>${escapeHtml(message)}</p>
                 </td>

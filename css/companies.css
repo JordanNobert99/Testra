@@ -500,6 +500,101 @@
     font-size: var(--font-sm);
 }
 
+/* Contact Field Groups */
+.contact-field-group {
+    display: flex;
+    gap: var(--space-md);
+    margin-bottom: var(--space-md);
+    align-items: flex-start;
+}
+
+.contact-field-group input[type="text"],
+.contact-field-group input[type="email"],
+.contact-field-group input[type="tel"] {
+    flex: 2;
+}
+
+.contact-field-group input.label-input {
+    flex: 1;
+    min-width: 120px;
+}
+
+.btn-remove-field {
+    padding: var(--space-md);
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--color-error);
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    height: 44px;
+}
+
+.btn-remove-field:hover {
+    background: rgba(239, 68, 68, 0.2);
+}
+
+.btn-add-field {
+    width: 100%;
+    padding: var(--space-sm) var(--space-md);
+    background: rgba(45, 114, 210, 0.1);
+    color: var(--color-primary);
+    border: 2px dashed #e2e8f0;
+    border-radius: var(--radius-md);
+    font-size: var(--font-sm);
+    font-weight: var(--font-semibold);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    margin-top: var(--space-sm);
+}
+
+.btn-add-field:hover {
+    background: rgba(45, 114, 210, 0.15);
+    border-color: var(--color-primary);
+}
+
+.contact-info-display {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.contact-info-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-size: var(--font-sm);
+}
+
+.contact-info-item i {
+    width: 16px;
+    color: var(--color-primary);
+}
+
+.contact-label {
+    font-weight: var(--font-semibold);
+    color: #64748b;
+    font-size: var(--font-xs);
+    min-width: 60px;
+}
+
+.contact-value {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+.contact-value:hover {
+    text-decoration: underline;
+}
+
 /* Dark Mode for Companies Page */
 body.dark-mode .page-header-left h2 {
     color: #f1f5f9;
