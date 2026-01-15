@@ -123,22 +123,22 @@
         <div class="modal-body">
             <form id="companyForm">
                 <input type="hidden" id="companyId">
-                
+
                 <!-- Company Name -->
                 <div class="form-group">
-                    <label>Company Name *</label>
+                    <label for="companyName">Company Name *</label>
                     <input type="text" id="companyName" class="form-input" placeholder="Enter company name" required>
                 </div>
 
                 <!-- Contact Person -->
                 <div class="form-group">
-                    <label>Contact Person *</label>
+                    <label for="contactPerson">Contact Person *</label>
                     <input type="text" id="contactPerson" class="form-input" placeholder="Enter contact name" required>
                 </div>
 
                 <!-- Email Addresses Section -->
                 <div class="form-group">
-                    <label>Email Addresses</label>
+                    <div style="margin-bottom: 8px; font-size: var(--font-sm); font-weight: var(--font-semibold); color: #0f172a;">Email Addresses</div>
                     <div id="emailsContainer">
                         <!-- Email fields will be dynamically added here -->
                     </div>
@@ -149,7 +149,7 @@
 
                 <!-- Phone Numbers Section -->
                 <div class="form-group">
-                    <label>Phone Numbers</label>
+                    <div style="margin-bottom: 8px; font-size: var(--font-sm); font-weight: var(--font-semibold); color: #0f172a;">Phone Numbers</div>
                     <div id="phonesContainer">
                         <!-- Phone fields will be dynamically added here -->
                     </div>
@@ -161,7 +161,7 @@
                 <!-- Service Type and Status -->
                 <div class="form-grid">
                     <div class="form-group">
-                        <label>Service Type *</label>
+                        <label for="serviceType">Service Type *</label>
                         <select id="serviceType" class="form-input" required>
                             <option value="">Select service</option>
                             <option value="testing">Drug & Alcohol Testing</option>
@@ -172,7 +172,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Status *</label>
+                        <label for="companyStatus">Status *</label>
                         <select id="companyStatus" class="form-input" required>
                             <option value="active">Active</option>
                             <option value="inactive">Inactive</option>
@@ -182,7 +182,7 @@
 
                 <!-- Notes -->
                 <div class="form-group">
-                    <label>Notes</label>
+                    <label for="companyNotes">Notes</label>
                     <textarea id="companyNotes" class="form-input" rows="3" placeholder="Additional notes or comments..."></textarea>
                 </div>
 
