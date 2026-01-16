@@ -430,6 +430,31 @@ function openCompanyModal(companyId = null) {
         addPhoneField();
     }
 
+    // *** ATTACH DIRECT EVENT LISTENERS TO BUTTONS ***
+    const addEmailBtn = document.getElementById('addEmailBtn');
+    const addPhoneBtn = document.getElementById('addPhoneBtn');
+
+    // Remove old listeners by cloning (removes all event listeners)
+    if (addEmailBtn) {
+        const newEmailBtn = addEmailBtn.cloneNode(true);
+        addEmailBtn.parentNode.replaceChild(newEmailBtn, addEmailBtn);
+        newEmailBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            console.log('📧 ADD EMAIL BUTTON CLICKED (direct listener)!');
+            addEmailField();
+        });
+    }
+
+    if (addPhoneBtn) {
+        const newPhoneBtn = addPhoneBtn.cloneNode(true);
+        addPhoneBtn.parentNode.replaceChild(newPhoneBtn, addPhoneBtn);
+        newPhoneBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            console.log('📞 ADD PHONE BUTTON CLICKED (direct listener)!');
+            addPhoneField();
+        });
+    }
+
     // Show modal
     modal.classList.add('show');
     console.log('✅ Modal shown');
