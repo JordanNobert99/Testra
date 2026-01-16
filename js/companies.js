@@ -507,11 +507,13 @@ async function handleCompanySubmit(e) {
             const companyRef = doc(db, 'companies', currentCompanyId);
             await updateDoc(companyRef, companyData);
             console.log('✅ Company updated:', currentCompanyId);
+            showSuccess('Company updated successfully!');
         } else {
             // Add new company
             companyData.createdAt = Timestamp.now();
             const docRef = await addDoc(collection(db, 'companies'), companyData);
             console.log('✅ Company created:', docRef.id);
+            showSuccess('Company added successfully!');
         }
 
         document.getElementById('companyModal').classList.remove('show');
@@ -578,6 +580,11 @@ function escapeHtml(text) {
         "'": '&#039;'
     };
     return String(text).replace(/[&<>"']/g, m => map[m]);
+}
+
+// Show success message
+function showSuccess(message) {
+    alert('✅ ' + message);
 }
 
 // Show error message
