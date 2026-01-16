@@ -221,8 +221,9 @@ async function loadCompaniesPage() {
         
         contentArea.innerHTML = html;
         
-        // Dynamically import the companies module
-        const { initializeCompaniesPage } = await import('./companies.js');
+        // Dynamically import the companies module with a timestamp to avoid caching
+        const timestamp = Date.now();
+        const { initializeCompaniesPage } = await import(`./companies.js?t=${timestamp}`);
         initializeCompaniesPage();
         
         console.log('✅ Companies page loaded');
@@ -365,8 +366,7 @@ function createNotificationsDropdown() {
     dropdown.innerHTML = `
         <div class="notifications-header">
             <h3>Notifications</h3>
-            ${unreadCount > 0 ? '<a href="#" class="mark-all-read" onclick="markAllAsRead(event)">Mark all as read</a>' : ''}
-        </div>
+            ${unreadCount > 0 ? '<a href="#" class="mark-all-read" onclick="markAllAsRead(event)">Mark all as read</a>' : ''}        </div>
         <div class="notifications-list">
             ${notifications.length > 0 ? renderNotifications() : '<div class="notifications-empty"><i class="fas fa-bell-slash"></i><p>No notifications</p></div>'}
         </div>
