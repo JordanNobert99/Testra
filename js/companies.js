@@ -432,35 +432,6 @@ function openCompanyModal(companyId = null) {
 
     // Show modal
     modal.classList.add('show');
-    
-    // *** ADD DIRECT EVENT LISTENERS AFTER MODAL IS SHOWN ***
-    setTimeout(() => {
-        const addEmailBtn = document.getElementById('addEmailBtn');
-        const addPhoneBtn = document.getElementById('addPhoneBtn');
-        
-        if (addEmailBtn) {
-            // Remove any existing listeners and add new one
-            const newEmailBtn = addEmailBtn.cloneNode(true);
-            addEmailBtn.parentNode.replaceChild(newEmailBtn, addEmailBtn);
-            newEmailBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                console.log('📧 ADD EMAIL BUTTON CLICKED via direct listener!');
-                addEmailField();
-            });
-        }
-        
-        if (addPhoneBtn) {
-            // Remove any existing listeners and add new one
-            const newPhoneBtn = addPhoneBtn.cloneNode(true);
-            addPhoneBtn.parentNode.replaceChild(newPhoneBtn, addPhoneBtn);
-            newPhoneBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                console.log('📞 ADD PHONE BUTTON CLICKED via direct listener!');
-                addPhoneField();
-            });
-        }
-    }, 0);
-
     console.log('✅ Modal shown');
 }
 
