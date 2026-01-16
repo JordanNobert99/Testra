@@ -43,29 +43,6 @@ function setupEventListeners() {
         });
     }
 
-    // *** EVENT DELEGATION FOR ADD EMAIL/PHONE BUTTONS ***
-    document.addEventListener('click', (e) => {
-        console.log('🖱️ Document clicked:', e.target);
-
-        // Check if clicked element is the Add Email button or its child
-        const addEmailBtn = e.target.closest('#addEmailBtn');
-        if (addEmailBtn) {
-            e.preventDefault();
-            console.log('📧 ADD EMAIL BUTTON CLICKED!');
-            addEmailField();
-            return;
-        }
-
-        // Check if clicked element is the Add Phone button or its child
-        const addPhoneBtn = e.target.closest('#addPhoneBtn');
-        if (addPhoneBtn) {
-            e.preventDefault();
-            console.log('📞 ADD PHONE BUTTON CLICKED!');
-            addPhoneField();
-            return;
-        }
-    });
-
     // Close modal handlers
     if (closeModal) closeModal.addEventListener('click', () => companyModal.classList.remove('show'));
     if (cancelBtn) cancelBtn.addEventListener('click', () => companyModal.classList.remove('show'));
