@@ -126,14 +126,23 @@
 
                 <!-- Company Name -->
                 <div class="form-group">
-                    <label for="companyName">Company Name *</label>
-                    <input type="text" id="companyName" class="form-input" placeholder="Enter company name" required>
+                    <label for="companyName">Company/Client Name *</label>
+                    <input type="text" id="companyName" class="form-input" placeholder="Enter company or client name" required>
                 </div>
 
                 <!-- Contact Person -->
                 <div class="form-group">
                     <label for="contactPerson">Contact Person *</label>
                     <input type="text" id="contactPerson" class="form-input" placeholder="Enter contact name" required>
+                </div>
+
+                <!-- Client Type -->
+                <div class="form-group">
+                    <label for="clientType">Client Type *</label>
+                    <select id="clientType" class="form-input" required>
+                        <option value="company">Company</option>
+                        <option value="individual">Individual</option>
+                    </select>
                 </div>
 
                 <!-- Email Addresses Section -->
@@ -158,26 +167,32 @@
                     </button>
                 </div>
 
-                <!-- Service Type and Status -->
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="serviceType">Service Type *</label>
-                        <select id="serviceType" class="form-input" required>
-                            <option value="">Select service</option>
-                            <option value="testing">Drug & Alcohol Testing</option>
-                            <option value="web">Website Design</option>
-                            <option value="it">IT Services</option>
-                            <option value="multiple">Multiple Services</option>
-                        </select>
+                <!-- Services Section - Changed from dropdown to checkboxes -->
+                <div class="form-group">
+                    <label>Services *</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="services" value="testing" class="service-checkbox">
+                            <span>Drug & Alcohol Testing</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="services" value="web" class="service-checkbox">
+                            <span>Website Design</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="services" value="it" class="service-checkbox">
+                            <span>IT Services</span>
+                        </label>
                     </div>
+                </div>
 
-                    <div class="form-group">
-                        <label for="companyStatus">Status *</label>
-                        <select id="companyStatus" class="form-input" required>
-                            <option value="active">Active</option>
-                            <option value="inactive">Inactive</option>
-                        </select>
-                    </div>
+                <!-- Status -->
+                <div class="form-group">
+                    <label for="companyStatus">Status *</label>
+                    <select id="companyStatus" class="form-input" required>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
                 </div>
 
                 <!-- Notes -->

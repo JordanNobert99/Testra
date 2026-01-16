@@ -215,10 +215,13 @@ function renderCompanies(companies) {
 
     tableBody.innerHTML = companies.map(company => `
         <tr>
-            <td><strong>${escapeHtml(company.companyName)}</strong></td>
+            <td>
+                <strong>${escapeHtml(company.companyName)}</strong>
+                ${company.clientType === 'individual' ? '<span class="client-type-badge">Individual</span>' : ''}
+            </td>
             <td>${escapeHtml(company.contactPerson)}</td>
             <td>${renderContactInfo(company)}</td>
-            <td><span class="service-badge service-${company.serviceType}">${formatServiceType(company.serviceType)}</span></td>
+            <td>${renderServices(company)}</td>
             <td><span class="status-badge status-${company.status}"><i class="fas fa-circle"></i> ${capitalizeFirst(company.status)}</span></td>
             <td>
                 <div class="action-buttons">
@@ -298,7 +301,15 @@ function updateCompaniesStats(companies) {
     const total = companies.length;
     const active = companies.filter(c => c.status === 'active').length;
     const inactive = companies.filter(c => c.status === 'inactive').length;
-    const testing = companies.filter(c => c.serviceType === 'testing' || c.serviceType === 'multiple').length;
+    
+    // Count companies with testing service
+    const testing = companies.filter(c => {
+        if (c.services && Array.isArray(c.services)) {
+            return c.services.includes('testing');
+        }
+        // Backwards compatibility
+        return c.serviceType === 'testing' || c.serviceType === 'multiple';
+    }).length;
 
     document.getElementById('totalCompanies').textContent = total;
     document.getElementById('activeCompanies').textContent = active;
@@ -336,9 +347,15 @@ function filterCompanies() {
         });
     }
 
-    // Service filter
+    // Service filter - check if the service is in the services array
     if (serviceFilter) {
-        filtered = filtered.filter(company => company.serviceType === serviceFilter);
+        filtered = filtered.filter(company => {
+            if (company.services && Array.isArray(company.services)) {
+                return company.services.includes(serviceFilter);
+            }
+            // Backwards compatibility
+            return company.serviceType === serviceFilter || company.serviceType === 'multiple';
+        });
     }
 
     // Status filter
@@ -368,17 +385,37 @@ function openCompanyModal(companyId = null) {
     emailsContainer.innerHTML = '';
     phonesContainer.innerHTML = '';
 
+    // Uncheck all service checkboxes
+    document.querySelectorAll('.service-checkbox').forEach(cb => cb.checked = false);
+
     if (companyId) {
         // Edit mode
         const company = companiesData.find(c => c.id === companyId);
         if (company) {
-            modalTitle.innerHTML = '<i class="fas fa-building"></i> Edit Company';
+            modalTitle.innerHTML = '<i class="fas fa-building"></i> Edit Client';
             document.getElementById('companyId').value = company.id;
             document.getElementById('companyName').value = company.companyName;
             document.getElementById('contactPerson').value = company.contactPerson;
-            document.getElementById('serviceType').value = company.serviceType;
+            document.getElementById('clientType').value = company.clientType || 'company';
             document.getElementById('companyStatus').value = company.status;
             document.getElementById('companyNotes').value = company.notes || '';
+
+            // Check the appropriate service checkboxes
+            if (company.services && Array.isArray(company.services)) {
+                company.services.forEach(service => {
+                    const checkbox = document.querySelector(`.service-checkbox[value="${service}"]`);
+                    if (checkbox) checkbox.checked = true;
+                });
+            } else if (company.serviceType) {
+                // Backwards compatibility: convert old serviceType to services array
+                if (company.serviceType === 'multiple') {
+                    // If it was "multiple", check all boxes (you may want different logic here)
+                    document.querySelectorAll('.service-checkbox').forEach(cb => cb.checked = true);
+                } else {
+                    const checkbox = document.querySelector(`.service-checkbox[value="${company.serviceType}"]`);
+                    if (checkbox) checkbox.checked = true;
+                }
+            }
 
             // Populate emails
             if (company.emails && company.emails.length > 0) {
@@ -400,7 +437,7 @@ function openCompanyModal(companyId = null) {
         }
     } else {
         // Add mode
-        modalTitle.innerHTML = '<i class="fas fa-building"></i> Add Company';
+        modalTitle.innerHTML = '<i class="fas fa-building"></i> Add Client';
         console.log('📧 Adding initial email field');
         addEmailField();
         console.log('📞 Adding initial phone field');
@@ -477,12 +514,19 @@ function collectPhones() {
     return phones;
 }
 
+// Collect selected services
+function collectServices() {
+    const checkboxes = document.querySelectorAll('.service-checkbox:checked');
+    return Array.from(checkboxes).map(cb => cb.value);
+}
+
 // Handle form submission
 async function handleCompanySubmit(e) {
     e.preventDefault();
 
     const emails = collectEmails();
     const phones = collectPhones();
+    const services = collectServices();
 
     // Validate at least one contact method
     if (emails.length === 0 && phones.length === 0) {
@@ -490,12 +534,19 @@ async function handleCompanySubmit(e) {
         return;
     }
 
+    // Validate at least one service is selected
+    if (services.length === 0) {
+        showError('Please select at least one service');
+        return;
+    }
+
     const companyData = {
         companyName: document.getElementById('companyName').value.trim(),
         contactPerson: document.getElementById('contactPerson').value.trim(),
+        clientType: document.getElementById('clientType').value,
         emails: emails,
         phones: phones,
-        serviceType: document.getElementById('serviceType').value,
+        services: services,
         status: document.getElementById('companyStatus').value,
         notes: document.getElementById('companyNotes').value.trim(),
         updatedAt: Timestamp.now()
@@ -507,13 +558,13 @@ async function handleCompanySubmit(e) {
             const companyRef = doc(db, 'companies', currentCompanyId);
             await updateDoc(companyRef, companyData);
             console.log('✅ Company updated:', currentCompanyId);
-            showSuccess('Company updated successfully!');
+            showSuccess('Client updated successfully!');
         } else {
             // Add new company
             companyData.createdAt = Timestamp.now();
             const docRef = await addDoc(collection(db, 'companies'), companyData);
             console.log('✅ Company created:', docRef.id);
-            showSuccess('Company added successfully!');
+            showSuccess('Client added successfully!');
         }
 
         document.getElementById('companyModal').classList.remove('show');
@@ -553,17 +604,6 @@ async function handleCompanyDelete() {
 
 // Utility Functions
 
-// Format service type for display
-function formatServiceType(type) {
-    const types = {
-        'testing': 'Drug Testing',
-        'web': 'Web Design',
-        'it': 'IT Services',
-        'multiple': 'Multiple'
-    };
-    return types[type] || type;
-}
-
 // Capitalize first letter
 function capitalizeFirst(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
@@ -602,4 +642,148 @@ function showError(message) {
     } else {
         alert('❌ ' + message);
     }
+}
+
+// New function to render services
+function renderServices(company) {
+    let services = company.services;
+    
+    // Backwards compatibility: convert old serviceType to array
+    if (!services && company.serviceType) {
+        if (company.serviceType === 'multiple') {
+            services = ['testing', 'web', 'it'];
+        } else {
+            services = [company.serviceType];
+        }
+    }
+
+    if (!services || services.length === 0) {
+        return '<span class="service-badge">None</span>';
+    }
+
+    return services.map(service => 
+        `<span class="service-badge service-${service}">${formatServiceType(service)}</span>`
+    ).join(' ');
+}
+
+// Update the render function to display multiple services
+function renderCompanies(companies) {
+    const tableBody = document.getElementById('companiesTableBody');
+    const emptyState = document.getElementById('emptyState');
+    const tableCard = document.querySelector('.table-card');
+
+    if (!companies || companies.length === 0) {
+        if (tableCard) tableCard.style.display = 'none';
+        if (emptyState) emptyState.style.display = 'flex';
+        return;
+    }
+
+    if (tableCard) tableCard.style.display = 'block';
+    if (emptyState) emptyState.style.display = 'none';
+
+    tableBody.innerHTML = companies.map(company => `
+        <tr>
+            <td>
+                <strong>${escapeHtml(company.companyName)}</strong>
+                ${company.clientType === 'individual' ? '<span class="client-type-badge">Individual</span>' : ''}
+            </td>
+            <td>${escapeHtml(company.contactPerson)}</td>
+            <td>${renderContactInfo(company)}</td>
+            <td>${renderServices(company)}</td>
+            <td><span class="status-badge status-${company.status}"><i class="fas fa-circle"></i> ${capitalizeFirst(company.status)}</span></td>
+            <td>
+                <div class="action-buttons">
+                    <button class="action-btn action-btn-edit" data-company-id="${company.id}" title="Edit">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="action-btn action-btn-delete" data-company-id="${company.id}" data-company-name="${escapeHtml(company.companyName)}" title="Delete">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </td>
+        </tr>
+    `).join('');
+
+    // Attach event listeners to action buttons
+    attachActionButtonListeners();
+}
+
+// Update stats function
+function updateCompaniesStats(companies) {
+    const total = companies.length;
+    const active = companies.filter(c => c.status === 'active').length;
+    const inactive = companies.filter(c => c.status === 'inactive').length;
+    
+    // Count companies with testing service
+    const testing = companies.filter(c => {
+        if (c.services && Array.isArray(c.services)) {
+            return c.services.includes('testing');
+        }
+        // Backwards compatibility
+        return c.serviceType === 'testing' || c.serviceType === 'multiple';
+    }).length;
+
+    document.getElementById('totalCompanies').textContent = total;
+    document.getElementById('activeCompanies').textContent = active;
+    document.getElementById('inactiveCompanies').textContent = inactive;
+    document.getElementById('testingCompanies').textContent = testing;
+}
+
+// Update filter function to work with multiple services
+function filterCompanies() {
+    const searchTerm = document.getElementById('searchCompanies')?.value.toLowerCase() || '';
+    const serviceFilter = document.getElementById('filterService')?.value || '';
+    const statusFilter = document.getElementById('filterStatus')?.value || '';
+
+    let filtered = companiesData;
+
+    // Search filter
+    if (searchTerm) {
+        filtered = filtered.filter(company => {
+            const nameMatch = company.companyName.toLowerCase().includes(searchTerm);
+            const contactMatch = company.contactPerson.toLowerCase().includes(searchTerm);
+
+            // Search in emails
+            const emailMatch = company.emails?.some(email =>
+                email.value.toLowerCase().includes(searchTerm) ||
+                email.label.toLowerCase().includes(searchTerm)
+            );
+
+            // Search in phones
+            const phoneMatch = company.phones?.some(phone =>
+                phone.value.includes(searchTerm) ||
+                phone.label.toLowerCase().includes(searchTerm)
+            );
+
+            return nameMatch || contactMatch || emailMatch || phoneMatch;
+        });
+    }
+
+    // Service filter - check if the service is in the services array
+    if (serviceFilter) {
+        filtered = filtered.filter(company => {
+            if (company.services && Array.isArray(company.services)) {
+                return company.services.includes(serviceFilter);
+            }
+            // Backwards compatibility
+            return company.serviceType === serviceFilter || company.serviceType === 'multiple';
+        });
+    }
+
+    // Status filter
+    if (statusFilter) {
+        filtered = filtered.filter(company => company.status === statusFilter);
+    }
+
+    renderCompanies(filtered);
+}
+
+// Update formatServiceType to remove "Multiple"
+function formatServiceType(type) {
+    const types = {
+        'testing': 'Drug Testing',
+        'web': 'Web Design',
+        'it': 'IT Services'
+    };
+    return types[type] || type;
 }
