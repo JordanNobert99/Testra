@@ -55,20 +55,32 @@
 
     <!-- Calendar Controls -->
     <div class="calendar-controls">
-        <button class="btn-secondary" id="prevMonth">
-            <i class="fas fa-chevron-left"></i> Previous
-        </button>
-        <h3 id="currentMonth">January 2026</h3>
-        <button class="btn-secondary" id="nextMonth">
-            Next <i class="fas fa-chevron-right"></i>
-        </button>
-        <button class="btn-secondary" id="todayBtn">
-            <i class="fas fa-calendar-day"></i> Today
-        </button>
+        <div class="calendar-nav">
+            <button class="btn-secondary" id="prevPeriod">
+                <i class="fas fa-chevron-left"></i> Previous
+            </button>
+            <h3 id="currentPeriod">January 2026</h3>
+            <button class="btn-secondary" id="nextPeriod">
+                Next <i class="fas fa-chevron-right"></i>
+            </button>
+            <button class="btn-secondary" id="todayBtn">
+                <i class="fas fa-calendar-day"></i> Today
+            </button>
+        </div>
+
+        <!-- View Toggle -->
+        <div class="view-toggle">
+            <button class="view-btn active" id="monthViewBtn" data-view="month">
+                <i class="fas fa-calendar"></i> Month
+            </button>
+            <button class="view-btn" id="weekViewBtn" data-view="week">
+                <i class="fas fa-calendar-week"></i> Week
+            </button>
+        </div>
     </div>
 
-    <!-- Calendar Grid -->
-    <div class="calendar-container">
+    <!-- Monthly Calendar Grid -->
+    <div class="calendar-container" id="monthCalendar">
         <div class="calendar-header">
             <div class="calendar-day-name">Sunday</div>
             <div class="calendar-day-name">Monday</div>
@@ -80,6 +92,67 @@
         </div>
         <div class="calendar-grid" id="calendarGrid">
             <!-- Calendar days will be generated here -->
+        </div>
+    </div>
+
+    <!-- Weekly Calendar View -->
+    <div class="calendar-container calendar-week-view" id="weekCalendar" style="display: none;">
+        <div class="week-header">
+            <div class="week-time-column">Time</div>
+            <div class="week-day-column">Sun</div>
+            <div class="week-day-column">Mon</div>
+            <div class="week-day-column">Tue</div>
+            <div class="week-day-column">Wed</div>
+            <div class="week-day-column">Thu</div>
+            <div class="week-day-column">Fri</div>
+            <div class="week-day-column">Sat</div>
+        </div>
+        <div class="week-grid" id="weekGrid">
+            <!-- Week view will be generated here -->
+        </div>
+    </div>
+
+    <!-- Hover Popup for Appointment Details -->
+    <div class="appointment-popup" id="appointmentPopup" style="display: none;">
+        <div class="popup-header">
+            <h4 id="popupTitle"></h4>
+            <span class="popup-status" id="popupStatus"></span>
+        </div>
+        <div class="popup-body">
+            <div class="popup-row">
+                <i class="fas fa-clock"></i>
+                <span id="popupTime"></span>
+            </div>
+            <div class="popup-row" id="popupCompanyRow">
+                <i class="fas fa-building"></i>
+                <span id="popupCompany"></span>
+            </div>
+            <div class="popup-row" id="popupLocationRow">
+                <i class="fas fa-map-marker-alt"></i>
+                <span id="popupLocation"></span>
+            </div>
+            <div class="popup-row">
+                <i class="fas fa-tag"></i>
+                <span id="popupService"></span>
+            </div>
+            <div class="popup-section" id="popupDrugTesting" style="display: none;">
+                <div class="popup-section-title">
+                    <i class="fas fa-vial"></i> Drug Testing Details
+                </div>
+                <div class="popup-drug-details" id="popupDrugDetails"></div>
+            </div>
+            <div class="popup-row" id="popupNotesRow">
+                <i class="fas fa-sticky-note"></i>
+                <span id="popupNotes"></span>
+            </div>
+        </div>
+        <div class="popup-actions">
+            <button class="popup-btn popup-btn-edit" id="popupEditBtn">
+                <i class="fas fa-edit"></i> Edit
+            </button>
+            <button class="popup-btn popup-btn-delete" id="popupDeleteBtn">
+                <i class="fas fa-trash"></i> Delete
+            </button>
         </div>
     </div>
 
@@ -162,6 +235,63 @@
                             <option value="completed">Completed</option>
                             <option value="cancelled">Cancelled</option>
                         </select>
+                    </div>
+                </div>
+
+                <!-- Drug Testing Specific Fields -->
+                <div id="drugTestingFields" style="display: none;">
+                    <div class="form-section-header">
+                        <h4><i class="fas fa-vial"></i> Drug Testing Details</h4>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="testType">Test Type *</label>
+                            <select id="testType" class="form-input">
+                                <option value="">Select Test Type</option>
+                                <option value="poct">POCT (Point of Care Testing)</option>
+                                <option value="lab">Lab Testing</option>
+                                <option value="poct-to-lab">POCT-to-Lab</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="testingKit">Testing Kit</label>
+                            <select id="testingKit" class="form-input">
+                                <option value="">Select Testing Kit</option>
+                                <option value="5-panel">5-Panel</option>
+                                <option value="10-panel">10-Panel</option>
+                                <option value="12-panel">12-Panel</option>
+                                <option value="other">Other</option>
+                            </select>
+                            <small>Required for POCT and POCT-to-Lab tests</small>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>What Will Be Tested *</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" class="test-substance-checkbox" value="breath-alcohol">
+                                <span>Breath Alcohol</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" class="test-substance-checkbox" value="urine">
+                                <span>Urine Drug Testing</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" class="test-substance-checkbox" value="oral">
+                                <span>Oral Drug Testing</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-label checkbox-highlight">
+                            <input type="checkbox" id="cleanCardRequired">
+                            <span><strong>Clean Card Required</strong></span>
+                        </label>
+                        <small>Check if a clean card documentation is needed</small>
                     </div>
                 </div>
 

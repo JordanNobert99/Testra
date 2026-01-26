@@ -8,19 +8,65 @@
 .calendar-controls {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+    margin: 30px 20px;
+    padding: 0;
     gap: 20px;
-    margin: 30px 0;
-    padding: 0 20px;
 }
 
-    .calendar-controls h3 {
-        margin: 0;
-        font-size: 24px;
-        font-weight: 600;
-        min-width: 200px;
-        text-align: center;
-    }
+.calendar-nav {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.calendar-nav h3 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+    min-width: 250px;
+    text-align: center;
+}
+
+/* View Toggle - Updated to match navigation button style */
+.view-toggle {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.view-btn {
+    padding: 10px 20px;
+    border: 1px solid var(--border-color);
+    background: var(--card-bg);
+    color: var(--text-primary);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: var(--shadow-sm);
+}
+
+.view-btn:hover {
+    background: var(--bg-secondary);
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.view-btn.active {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.view-btn i {
+    font-size: 14px;
+}
 
 /* Calendar Container */
 .calendar-container {
@@ -69,22 +115,22 @@
     border: 2px solid transparent;
 }
 
-    .calendar-day:hover {
-        border-color: var(--primary-color);
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-md);
-    }
+.calendar-day:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
 
-    .calendar-day.empty {
-        background: transparent;
-        cursor: default;
-        pointer-events: none;
-    }
+.calendar-day.empty {
+    background: transparent;
+    cursor: default;
+    pointer-events: none;
+}
 
-    .calendar-day.today {
-        border-color: var(--primary-color);
-        background: rgba(37, 99, 235, 0.1);
-    }
+.calendar-day.today {
+    border-color: var(--primary-color);
+    background: rgba(37, 99, 235, 0.1);
+}
 
 .day-number {
     font-weight: 600;
@@ -106,53 +152,347 @@
 
 .appointment-indicator {
     font-size: 11px;
-    padding: 4px 6px;
+    padding: 6px 8px;
     border-radius: 4px;
+    cursor: move; /* Changed to move cursor for drag */
+    transition: all 0.2s ease;
+    border-left: 3px solid;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    line-height: 1.3;
+}
+
+.apt-time {
+    font-weight: 700;
+    font-size: 10px;
+}
+
+.apt-title {
+    font-weight: 600;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.apt-company {
+    font-size: 9px;
+    opacity: 0.8;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.apt-badge {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.3);
+    padding: 1px 4px;
+    border-radius: 3px;
+    font-size: 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-top: 2px;
+}
+
+.apt-company-small {
+    font-size: 10px;
+    opacity: 0.7;
+}
+
+/* Appointment Hover Popup */
+.appointment-popup {
+    position: absolute;
+    background: var(--card-bg);
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: var(--shadow-lg);
+    z-index: 1000;
+    min-width: 320px;
+    max-width: 400px;
+    animation: popupFadeIn 0.2s ease;
+}
+
+@keyframes popupFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.popup-header {
+    padding: 15px;
+    border-bottom: 2px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.popup-header h4 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    flex: 1;
+}
+
+.popup-status {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.popup-status.status-scheduled {
+    background: rgba(37, 99, 235, 0.15);
+    color: var(--primary-color);
+}
+
+.popup-status.status-confirmed {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--success-color);
+}
+
+.popup-status.status-completed {
+    background: rgba(34, 197, 94, 0.15);
+    color: #22c55e;
+}
+
+.popup-status.status-cancelled {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+}
+
+.popup-body {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.popup-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 14px;
+    color: var(--text-primary);
+}
+
+.popup-row i {
+    color: var(--text-secondary);
+    width: 16px;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.popup-row span {
+    flex: 1;
+}
+
+.popup-section {
+    margin-top: 8px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-color);
+}
+
+.popup-section-title {
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.popup-drug-details {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-left: 24px;
+}
+
+.popup-drug-item {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.popup-drug-item strong {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.clean-card-badge {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--success-color);
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.popup-actions {
+    padding: 12px 15px;
+    border-top: 2px solid var(--border-color);
+    display: flex;
+    gap: 10px;
+}
+
+.popup-btn {
+    flex: 1;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
-    border-left: 3px solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
 }
 
-    .appointment-indicator:hover {
-        transform: translateX(2px);
-        box-shadow: var(--shadow-sm);
-    }
+.popup-btn-edit {
+    background: var(--primary-color);
+    color: white;
+}
 
-    .appointment-indicator.service-testing {
-        background: rgba(16, 185, 129, 0.15);
-        color: var(--success-color);
-        border-left-color: var(--success-color);
-    }
+.popup-btn-edit:hover {
+    background: var(--secondary-color);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
 
-    .appointment-indicator.service-web {
-        background: rgba(37, 99, 235, 0.15);
-        color: var(--primary-color);
-        border-left-color: var(--primary-color);
-    }
+.popup-btn-delete {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
 
-    .appointment-indicator.service-it {
-        background: rgba(251, 146, 60, 0.15);
-        color: var(--accent-color);
-        border-left-color: var(--accent-color);
-    }
+.popup-btn-delete:hover {
+    background: #ef4444;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
 
-    .appointment-indicator.service-other {
-        background: rgba(148, 163, 184, 0.15);
-        color: var(--text-secondary);
-        border-left-color: var(--text-secondary);
-    }
+/* Drag and Drop States */
+.calendar-day.drag-over {
+    background: rgba(37, 99, 235, 0.1);
+    border-color: var(--primary-color);
+    border-style: dashed;
+}
 
-.appointment-more {
+.appointment-indicator[draggable="true"] {
+    cursor: move;
+}
+
+.appointment-indicator[draggable="true"]:active {
+    cursor: grabbing;
+}
+
+/* Dark Mode Adjustments for Popup */
+.dark-mode .appointment-popup {
+    background: var(--bg-secondary);
+    border-color: var(--border-color);
+}
+
+.dark-mode .popup-header {
+    border-bottom-color: var(--border-color);
+}
+
+.dark-mode .popup-section {
+    border-top-color: var(--border-color);
+}
+
+.dark-mode .popup-actions {
+    border-top-color: var(--border-color);
+}
+
+/* Dark Mode - View Toggle Buttons */
+.dark-mode .view-btn {
+    background: var(--bg-secondary);
+    border-color: var(--border-color);
+}
+
+.dark-mode .view-btn:hover {
+    background: var(--bg-tertiary);
+}
+
+.dark-mode .view-btn.active {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* ========================================
+   WEEKLY VIEW STYLES - UPDATED TO MATCH MONTHLY VIEW
+======================================== */
+
+.calendar-week-view {
+    /* Remove overflow-x since we're using block layout now */
+}
+
+/* Week grid blocks - uses same grid as monthly view */
+.week-grid-blocks {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+}
+
+/* Week view uses the same calendar-day styles as monthly view */
+.calendar-week-view .calendar-day {
+    min-height: 180px; /* Slightly taller for week view to show more appointments */
+}
+
+/* Show more appointments in week view without scrolling */
+.calendar-week-view .day-appointments {
+    max-height: none; /* Allow unlimited appointments to show */
+}
+
+/* Optional: Make appointment blocks slightly larger in week view for better readability */
+.calendar-week-view .appointment-indicator {
+    font-size: 12px;
+    padding: 7px 9px;
+}
+
+.calendar-week-view .apt-time {
+    font-size: 11px;
+}
+
+.calendar-week-view .apt-title {
+    font-size: 12px;
+}
+
+.calendar-week-view .apt-company {
     font-size: 10px;
-    color: var(--text-secondary);
-    padding: 2px 6px;
-    text-align: center;
 }
 
-/* Appointments Section */
+/* Remove old weekly hourly grid styles */
+.week-header,
+.week-time-column,
+.week-day-column,
+.week-date,
+.week-grid,
+.week-row,
+.week-time-cell,
+.week-day-cell,
+.week-appointment {
+    /* These are no longer needed */
+    display: none;
+}
+
+/* ========================================
+   APPOINTMENTS SECTION
+======================================== */
+
 .appointments-section {
     margin: 30px 20px;
     background: var(--card-bg);
@@ -161,14 +501,14 @@
     box-shadow: var(--shadow-sm);
 }
 
-    .appointments-section h3 {
-        margin: 0 0 20px 0;
-        font-size: 18px;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
+.appointments-section h3 {
+    margin: 0 0 20px 0;
+    font-size: 18px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 
 .appointments-list {
     display: flex;
@@ -189,26 +529,26 @@
     border-left: 4px solid;
 }
 
-    .appointment-item:hover {
-        transform: translateX(4px);
-        box-shadow: var(--shadow-md);
-    }
+.appointment-item:hover {
+    transform: translateX(4px);
+    box-shadow: var(--shadow-md);
+}
 
-    .appointment-item.service-testing {
-        border-left-color: var(--success-color);
-    }
+.appointment-item.service-testing {
+    border-left-color: var(--success-color);
+}
 
-    .appointment-item.service-web {
-        border-left-color: var(--primary-color);
-    }
+.appointment-item.service-web {
+    border-left-color: var(--primary-color);
+}
 
-    .appointment-item.service-it {
-        border-left-color: var(--accent-color);
-    }
+.appointment-item.service-it {
+    border-left-color: var(--accent-color);
+}
 
-    .appointment-item.service-other {
-        border-left-color: var(--text-secondary);
-    }
+.appointment-item.service-other {
+    border-left-color: var(--text-secondary);
+}
 
 .appointment-time {
     flex-shrink: 0;
@@ -248,14 +588,88 @@
     color: var(--text-secondary);
 }
 
-    .appointment-meta span {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-    }
+.appointment-meta span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
 
 .appointment-status {
     flex-shrink: 0;
+}
+
+/* Drug Test Badge */
+.drug-test-badge {
+    background: rgba(16, 185, 129, 0.2);
+    color: var(--success-color);
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+/* ========================================
+   FORM STYLES - DRUG TESTING FIELDS
+======================================== */
+
+.form-section-header {
+    margin: 20px 0 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.form-section-header h4 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background: var(--bg-secondary);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.checkbox-label:hover {
+    background: var(--bg-tertiary);
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.checkbox-label span {
+    font-size: 14px;
+    color: var(--text-primary);
+}
+
+.checkbox-highlight {
+    background: rgba(37, 99, 235, 0.1);
+    border: 2px solid rgba(37, 99, 235, 0.3);
+}
+
+.checkbox-highlight:hover {
+    background: rgba(37, 99, 235, 0.15);
+    border-color: rgba(37, 99, 235, 0.5);
 }
 
 /* Empty State */
@@ -265,21 +679,28 @@
     color: var(--text-secondary);
 }
 
-    .empty-state-small i {
-        font-size: 48px;
-        margin-bottom: 16px;
-        opacity: 0.5;
-    }
+.empty-state-small i {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
 
-    .empty-state-small p {
-        margin: 0;
-        font-size: 14px;
-    }
+.empty-state-small p {
+    margin: 0;
+    font-size: 14px;
+}
 
-/* Responsive Design */
+/* ========================================
+   RESPONSIVE DESIGN
+======================================== */
+
 @media (max-width: 1200px) {
     .calendar-day {
         min-height: 100px;
+    }
+
+    .calendar-week-view .calendar-day {
+        min-height: 150px;
     }
 }
 
@@ -289,13 +710,28 @@
         gap: 15px;
     }
 
-        .calendar-controls h3 {
-            font-size: 20px;
-        }
+    .calendar-nav {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .calendar-nav h3 {
+        font-size: 18px;
+        min-width: auto;
+    }
+
+    .view-toggle {
+        width: 100%;
+        justify-content: center;
+    }
 
     .calendar-day {
         min-height: 80px;
         padding: 6px;
+    }
+
+    .calendar-week-view .calendar-day {
+        min-height: 120px;
     }
 
     .day-number {
@@ -321,6 +757,8 @@
         width: auto;
         text-align: left;
     }
+
+    /* Keep weekly view available on mobile now that it's block-based */
 }
 
 /* Dark Mode Adjustments */
@@ -328,10 +766,18 @@
     background: var(--bg-tertiary);
 }
 
-    .dark-mode .calendar-day.today {
-        background: rgba(37, 99, 235, 0.2);
-    }
+.dark-mode .calendar-day.today {
+    background: rgba(37, 99, 235, 0.2);
+}
 
 .dark-mode .appointment-item {
     background: var(--bg-tertiary);
+}
+
+.dark-mode .week-day-cell {
+    background: var(--card-bg);
+}
+
+.dark-mode .week-day-column.today {
+    background: rgba(37, 99, 235, 0.2);
 }
