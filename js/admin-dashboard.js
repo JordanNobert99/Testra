@@ -240,6 +240,39 @@ async function loadCompaniesPage() {
     }
 }
 
+// ========================================
+// CALENDAR PAGE LOADER
+// ========================================
+
+async function loadCalendarPage() {
+    const contentArea = document.getElementById('contentArea');
+    
+    try {
+        // Fetch the HTML template
+        const response = await fetch('pages/calendar.html');
+        const html = await response.text();
+        
+        contentArea.innerHTML = html;
+        
+        // Dynamically import the calendar module with a timestamp to avoid caching
+        const timestamp = Date.now();
+        const { initializeCalendarPage } = await import(`./calendar.js?t=${timestamp}`);
+        initializeCalendarPage();
+        
+        console.log('✅ Calendar page loaded');
+    } catch (error) {
+        console.error('❌ Error loading calendar page:', error);
+        contentArea.innerHTML = `
+            <div class="page-placeholder">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h2>Error Loading Calendar Page</h2>
+                <p>Could not load pages/calendar.html</p>
+                <p style="color: #ef4444; font-size: 14px;">${error.message}</p>
+            </div>
+        `;
+    }
+}
+
 // Initialize notifications system
 function initializeNotifications(userId) {
     console.log('🔔 Initializing notifications for user:', userId);
