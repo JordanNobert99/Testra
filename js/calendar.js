@@ -471,10 +471,15 @@ async function handleDrop(e) {
     }
 
     try {
+        // FIX: Parse date string parts manually to avoid timezone issues
+        const [year, month, day] = targetDate.split('-').map(Number);
+        // Create date at noon local time to avoid timezone conversion issues
+        const newDate = new Date(year, month - 1, day, 12, 0, 0, 0);
+        
         // Update appointment date
         const appointmentRef = doc(db, 'appointments', draggedAppointmentId);
         await updateDoc(appointmentRef, {
-            appointmentDate: Timestamp.fromDate(new Date(targetDate)),
+            appointmentDate: Timestamp.fromDate(newDate),
             updatedAt: Timestamp.now()
         });
 
