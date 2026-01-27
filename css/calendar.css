@@ -4,7 +4,7 @@
     padding: 0;
 }
 
-/* Calendar Controls */
+/* Calendar Controls - IMPROVED LAYOUT */
 .calendar-controls {
     display: flex;
     align-items: center;
@@ -12,23 +12,25 @@
     margin: 30px 20px;
     padding: 0;
     gap: 20px;
+    flex-wrap: wrap;
 }
 
 .calendar-nav {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 15px;
+    flex: 1;
 }
 
 .calendar-nav h3 {
     margin: 0;
     font-size: 24px;
     font-weight: 600;
-    min-width: 250px;
+    min-width: 200px;
     text-align: center;
 }
 
-/* View Toggle - Updated to match navigation button style */
+/* View Toggle - Aligned with navigation buttons */
 .view-toggle {
     display: flex;
     gap: 10px;
@@ -60,12 +62,18 @@
 
 .view-btn.active {
     background: var(--primary-color);
-    color: white;
+    color: #9d9d9d !important; /* Grey text for both light and dark mode */
     border-color: var(--primary-color);
 }
 
-.view-btn i {
-    font-size: 14px;
+/* Dark Mode - View Toggle Buttons */
+.dark-mode .view-btn {
+    background: var(--bg-secondary);
+    border-color: var(--border-color);
+}
+
+.dark-mode .view-btn:hover {
+    background: var(--bg-tertiary);
 }
 
 /* Calendar Container */
@@ -154,13 +162,14 @@
     font-size: 11px;
     padding: 6px 8px;
     border-radius: 4px;
-    cursor: move; /* Changed to move cursor for drag */
+    cursor: move;
     transition: all 0.2s ease;
     border-left: 3px solid;
     display: flex;
     flex-direction: column;
     gap: 2px;
     line-height: 1.3;
+    position: relative;
 }
 
 .apt-time {
@@ -199,32 +208,33 @@
     opacity: 0.7;
 }
 
-/* Appointment Hover Popup */
+/* Appointment Hover Popup - IMPROVED TOOLTIP POSITIONING & SIZE */
 .appointment-popup {
-    position: absolute;
-    background: var(--card-bg);
+    position: fixed;
+    background: #FFFFFF; /* Solid white background instead of variable */
     border: 2px solid var(--border-color);
     border-radius: 8px;
-    box-shadow: var(--shadow-lg);
-    z-index: 1000;
-    min-width: 320px;
-    max-width: 400px;
-    animation: popupFadeIn 0.2s ease;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    z-index: 10000;
+    min-width: 280px;
+    max-width: 350px;
+    animation: popupFadeIn 0.15s ease;
+    pointer-events: auto;
 }
 
 @keyframes popupFadeIn {
     from {
         opacity: 0;
-        transform: translateY(-5px);
+        transform: scale(0.95) translateY(-10px);
     }
     to {
         opacity: 1;
-        transform: translateY(0);
+        transform: scale(1) translateY(0);
     }
 }
 
 .popup-header {
-    padding: 15px;
+    padding: 12px; /* REDUCED from 15px */
     border-bottom: 2px solid var(--border-color);
     display: flex;
     justify-content: space-between;
@@ -234,16 +244,16 @@
 
 .popup-header h4 {
     margin: 0;
-    font-size: 16px;
+    font-size: 15px; /* REDUCED from 16px */
     font-weight: 600;
     color: var(--text-primary);
     flex: 1;
 }
 
 .popup-status {
-    padding: 4px 10px;
+    padding: 3px 8px; /* REDUCED from 4px 10px */
     border-radius: 12px;
-    font-size: 11px;
+    font-size: 10px; /* REDUCED from 11px */
     font-weight: 600;
     text-transform: uppercase;
 }
@@ -269,23 +279,23 @@
 }
 
 .popup-body {
-    padding: 15px;
+    padding: 12px; /* REDUCED from 15px */
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px; /* REDUCED from 12px */
 }
 
 .popup-row {
     display: flex;
     align-items: flex-start;
-    gap: 12px;
-    font-size: 14px;
+    gap: 10px; /* REDUCED from 12px */
+    font-size: 13px; /* REDUCED from 14px */
     color: var(--text-primary);
 }
 
 .popup-row i {
     color: var(--text-secondary);
-    width: 16px;
+    width: 14px; /* REDUCED from 16px */
     margin-top: 2px;
     flex-shrink: 0;
 }
@@ -295,30 +305,30 @@
 }
 
 .popup-section {
-    margin-top: 8px;
-    padding-top: 12px;
+    margin-top: 6px; /* REDUCED from 8px */
+    padding-top: 10px; /* REDUCED from 12px */
     border-top: 1px solid var(--border-color);
 }
 
 .popup-section-title {
     font-weight: 600;
-    font-size: 13px;
+    font-size: 12px; /* REDUCED from 13px */
     color: var(--text-primary);
-    margin-bottom: 10px;
+    margin-bottom: 8px; /* REDUCED from 10px */
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px; /* REDUCED from 8px */
 }
 
 .popup-drug-details {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    padding-left: 24px;
+    gap: 6px; /* REDUCED from 8px */
+    padding-left: 20px; /* REDUCED from 24px */
 }
 
 .popup-drug-item {
-    font-size: 13px;
+    font-size: 12px; /* REDUCED from 13px */
     color: var(--text-secondary);
     line-height: 1.5;
 }
@@ -331,34 +341,35 @@
 .clean-card-badge {
     background: rgba(16, 185, 129, 0.15);
     color: var(--success-color);
-    padding: 6px 10px;
+    padding: 5px 8px; /* REDUCED from 6px 10px */
     border-radius: 6px;
     font-weight: 600;
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 5px; /* REDUCED from 6px */
+    font-size: 12px;
 }
 
 .popup-actions {
-    padding: 12px 15px;
+    padding: 10px 12px; /* REDUCED from 12px 15px */
     border-top: 2px solid var(--border-color);
     display: flex;
-    gap: 10px;
+    gap: 8px; /* REDUCED from 10px */
 }
 
 .popup-btn {
     flex: 1;
-    padding: 8px 16px;
+    padding: 7px 14px; /* REDUCED from 8px 16px */
     border: none;
     border-radius: 6px;
-    font-size: 13px;
+    font-size: 12px; /* REDUCED from 13px */
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
+    gap: 5px; /* REDUCED from 6px */
 }
 
 .popup-btn-edit {
@@ -401,8 +412,9 @@
 
 /* Dark Mode Adjustments for Popup */
 .dark-mode .appointment-popup {
-    background: var(--bg-secondary);
+    background: #1F2937; /* Solid dark background instead of variable */
     border-color: var(--border-color);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
 }
 
 .dark-mode .popup-header {
@@ -429,6 +441,7 @@
 
 .dark-mode .view-btn.active {
     background: var(--primary-color);
+    color: #6B7280 !important; /* Grey text in dark mode too */
     border-color: var(--primary-color);
 }
 
@@ -449,12 +462,12 @@
 
 /* Week view uses the same calendar-day styles as monthly view */
 .calendar-week-view .calendar-day {
-    min-height: 180px; /* Slightly taller for week view to show more appointments */
+    min-height: 180px;
 }
 
 /* Show more appointments in week view without scrolling */
 .calendar-week-view .day-appointments {
-    max-height: none; /* Allow unlimited appointments to show */
+    max-height: none;
 }
 
 /* Optional: Make appointment blocks slightly larger in week view for better readability */
@@ -473,20 +486,6 @@
 
 .calendar-week-view .apt-company {
     font-size: 10px;
-}
-
-/* Remove old weekly hourly grid styles */
-.week-header,
-.week-time-column,
-.week-day-column,
-.week-date,
-.week-grid,
-.week-row,
-.week-time-cell,
-.week-day-cell,
-.week-appointment {
-    /* These are no longer needed */
-    display: none;
 }
 
 /* ========================================
@@ -707,17 +706,20 @@
 @media (max-width: 768px) {
     .calendar-controls {
         flex-direction: column;
+        align-items: stretch;
         gap: 15px;
     }
 
     .calendar-nav {
         flex-direction: column;
         width: 100%;
+        gap: 10px;
     }
 
     .calendar-nav h3 {
         font-size: 18px;
         min-width: auto;
+        order: -1;
     }
 
     .view-toggle {
@@ -758,7 +760,10 @@
         text-align: left;
     }
 
-    /* Keep weekly view available on mobile now that it's block-based */
+    .appointment-popup {
+        max-width: 90vw;
+        min-width: 260px;
+    }
 }
 
 /* Dark Mode Adjustments */
@@ -772,12 +777,4 @@
 
 .dark-mode .appointment-item {
     background: var(--bg-tertiary);
-}
-
-.dark-mode .week-day-cell {
-    background: var(--card-bg);
-}
-
-.dark-mode .week-day-column.today {
-    background: rgba(37, 99, 235, 0.2);
 }

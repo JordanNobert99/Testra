@@ -493,7 +493,7 @@ async function handleDrop(e) {
     return false;
 }
 
-// Show appointment hover popup
+// Show appointment hover popup - IMPROVED POSITIONING WITH VERTICAL FIX
 function showAppointmentPopup(appointment, event) {
     clearTimeout(popupTimeout);
     
@@ -577,22 +577,54 @@ function showAppointmentPopup(appointment, event) {
     document.getElementById('popupEditBtn').dataset.appointmentId = appointment.id;
     document.getElementById('popupDeleteBtn').dataset.appointmentId = appointment.id;
     
-    // Position popup near the element
-    const rect = event.target.getBoundingClientRect();
-    popup.style.display = 'block';
-    popup.style.left = `${rect.left + window.scrollX}px`;
-    popup.style.top = `${rect.bottom + window.scrollY + 5}px`;
+    // IMPROVED POSITIONING - Show tooltip near cursor with smart positioning
+    const mouseX = event.clientX;
+    const mouseY = event.clientY;
     
-    // Adjust if popup goes off screen
-    setTimeout(() => {
+    // Show popup first to get its dimensions
+    popup.style.display = 'block';
+    popup.style.opacity = '0';
+    
+    // Use requestAnimationFrame for better positioning timing
+    requestAnimationFrame(() => {
         const popupRect = popup.getBoundingClientRect();
-        if (popupRect.right > window.innerWidth) {
-            popup.style.left = `${window.innerWidth - popupRect.width - 20}px`;
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+        const padding = 15;
+        const offset = 10; // Offset from cursor
+        
+        let left = mouseX + offset;
+        let top = mouseY + offset;
+        
+        // Horizontal positioning
+        // Check if popup goes off right edge
+        if (left + popupRect.width > viewportWidth - padding) {
+            left = mouseX - popupRect.width - offset;
         }
-        if (popupRect.bottom > window.innerHeight) {
-            popup.style.top = `${rect.top + window.scrollY - popupRect.height - 5}px`;
+        
+        // Check if popup goes off left edge
+        if (left < padding) {
+            left = padding;
         }
-    }, 0);
+        
+        // Vertical positioning - FIXED
+        // Check if popup goes off bottom edge
+        if (top + popupRect.height > viewportHeight - padding) {
+            // Position above cursor
+            top = mouseY - popupRect.height - offset;
+        }
+        
+        // Check if popup goes off top edge (after moving above)
+        if (top < padding) {
+            // If it doesn't fit above or below, center it vertically with scroll consideration
+            top = Math.max(padding, Math.min(mouseY - popupRect.height / 2, viewportHeight - popupRect.height - padding));
+        }
+        
+        // Apply position
+        popup.style.left = `${left}px`;
+        popup.style.top = `${top}px`;
+        popup.style.opacity = '1';
+    });
 }
 
 // Hide appointment popup
